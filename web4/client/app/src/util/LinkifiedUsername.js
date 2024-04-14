@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LinkifiedUsername = ({ text }) => {
+const LinkifiedUsername = ({ text, color }) => {
     if (text === null || text === undefined) {
         return <p></p>;
     } else {
@@ -14,7 +14,7 @@ const LinkifiedUsername = ({ text }) => {
             if (word.startsWith('@')) {
                 const username = word.slice(1);
                 const profileLink = `/profile/user/${username}`;
-                return <a href={profileLink} className='username username-link' style={{ fontWeight: 'bold' }}>{username}</a>;
+                return <a href={profileLink} className={`username username-link ${color ? color : ''}`} style={{ fontWeight: 'bold' }}>{username}</a>;
             }
             return word;
         };

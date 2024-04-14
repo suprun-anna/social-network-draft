@@ -31,4 +31,15 @@ public class Message {
 
     @Column(name = "sent_at", nullable = false)
     private LocalDateTime sentAt;
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", sender=" + sender.getId() +
+                ", receiver=" + receiver.getId() +
+                ", messageText='" + messageText + '\'' +
+                ", sentAt=" + sentAt +
+                '}';
+    }
 }

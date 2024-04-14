@@ -1,190 +1,179 @@
-import React, { useState, useEffect } from 'react';
-import SockJsClient from 'react-stomp';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+import { sendGetRequest } from '../util/requests';
+import '../styles/chatStyles.css'
+import Menu from '../components/Menu/Menu';
+import { Message, MyMessage } from './Message';
 
-const Chat = () => {
+const SERVER = 'http://localhost:8080/api';
+
+function ChatPage() {
+  const { username } = useParams(); 
+  const [token, setToken] = useState('');
+  const [connected, setConnected] = useState(false);
+  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [client, setClient] = useState(null); // Состояние для отслеживания клиента
+  const [stompClient, setStompClient] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [me, setMe] = useState(null);
+  const messagesContainerRef = useRef(null);
+  const [nextPageNumber, setNextPageNumber] = useState(1);
+  const pageSize = 10; 
 
-  const handleMessageChange = event => {
-    setNewMessage(event.target.value);
-  };
-
-  const handleNewMessage = message => {
-    setMessages(prevMessages => [...prevMessages, message]);
-  };
-
-  const sendMessage = () => {
-    if (client && newMessage.trim() !== '') { // Проверка наличия клиента
-      const message = {
-        messageText: newMessage
-      };
-      client.sendMessage('/app/chat', JSON.stringify(message));
-      setNewMessage('');
-    }
-  };
-
-  const connectCallback = () => {
-    const token = localStorage.getItem('token'); 
-    const headers = { Authorization: `Bearer ${token}` };
-    return headers;
-  };
 
   useEffect(() => {
-    // Устанавливаем клиента в состояние
-    if (client === null) {
-      setClient(document.querySelector('#sockjs-client'));
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
     }
-  }, [client]);
+  }, []);
 
-  const handleConnect = () => {
-    console.log("Connected!");
+  useEffect(() => {
+    if (token) {
+      const socket = new SockJS("http://localhost:8080/api/ws");
+      const client = Stomp.over(socket);
+      client.connect({ Authorization: `Bearer ${token}` }, (frame) => {
+        console.log(frame);
+        setConnected(true);
+      });
+      setStompClient(client);
+    }
+  }, [token]);
+
+  useEffect(() => {
+
+    const fetchUserData = async () => {
+      if (username) {
+        const user = await getUserInfo(`${SERVER}/user?username=${username}`);
+        setCurrentUser(user);
+      }
+    }
+
+    fetchUserData();
+  }, [token, username]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUserInfo(`${SERVER}/user/me`);
+      setMe(user);
+    }
+
+    fetchUserData();
+  }, [token]);
+
+  async function getUserInfo(request, error = 'Error fetching user data: ') {
+    return (await sendGetRequest(request, error)).data;
+  }
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (stompClient && connected && message.trim() !== '' && currentUser) {
+      stompClient.send("/app/chat", {}, JSON.stringify({
+        senderId: me.id,
+        receiverId: currentUser.id,
+        messageText: message
+      }));
+      setMessage('');
+    }
   };
 
-  const handleDisconnect = () => {
-    console.log("Disconnected!");
-  };
+
+
+
+
+  useEffect(() => {
+    if (stompClient && connected && currentUser && me) {
+      const sortedIds = [currentUser.id, me.id].sort((a, b) => a - b);
+      const uniqueTopic = `/topic/chat/${sortedIds[0]}-${sortedIds[1]}`;
+      let isSubscribed = false;
+
+      stompClient.subscribe(uniqueTopic, (message) => {
+        const data = JSON.parse(message.body);
+        console.log(data);
+        setMessages(prevMessages => [data, ...prevMessages]);
+        isSubscribed = true;
+      });
+    }
+  }, [stompClient, connected, currentUser, me]);
+
+
+
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (me && currentUser) {
+        const fetchedMessages = await getAllMessagesBetweenUsers(me.id, currentUser.id, 0, pageSize);
+        setMessages(fetchedMessages);
+      }
+    };
+
+
+    fetchMessages();
+  }, [me, currentUser]);
+
+  async function getAllMessagesBetweenUsers(senderId, receiverId, page, size) {
+    const response = await sendGetRequest(`${SERVER}/messages?senderId=${senderId}&receiverId=${receiverId}&page=${page}&size=${size}`);
+    const data = response.data;
+    return data;
+  }
+
+
+
+
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (messagesContainerRef.current && me && currentUser) {
+        const container = messagesContainerRef.current;
+        const scrollPosition = container.scrollHeight - container.clientHeight - container.scrollTop;
+        const bottomThreshold = 100; 
+        if (scrollPosition <= bottomThreshold) {
+          const newMessages = await getAllMessagesBetweenUsers(me.id, currentUser.id, nextPageNumber, pageSize);
+          setMessages(prevMessages => [...prevMessages, ...newMessages]);
+          setNextPageNumber(prevPageNumber => prevPageNumber + 1);
+          console.log(newMessages);
+        }
+      }
+    };
+  
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.addEventListener('scroll', handleScroll);
+    }
+  
+    return () => {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [me, currentUser, nextPageNumber, pageSize]); 
+  
+
 
   return (
-    <div>
-      <h1>Чат</h1>
-      <div>
-        {messages.map((message, index) => (
-          <div key={index}>
-            <p>{message.sender}: {message.messageText}</p>
-          </div>
-        ))}
-      </div>
-      <div>
-        <input type="text" value={newMessage} onChange={handleMessageChange} />
-        <SockJsClient
-          id="sockjs-client" // Указываем id для поиска клиента
-          url={'http://localhost:8080/api/chat'}
-          topics={['/topic/messages']}
-          onMessage={handleNewMessage}
-          headers={connectCallback()}
-          onConnect={handleConnect}
-          onDisconnect={handleDisconnect}
-        />
-        <button onClick={sendMessage}>Отправить</button>
+    <div className='container'>
+      <Menu />
+      <div className="message-page-container">
+        <h1 className="title">Chat with <a href={`/profile/user/${username}`} className='username username-link'>{username}</a></h1>
+        <div ref={messagesContainerRef} className="message-container">
+          {me && messages.map((msg, index) => (
+            msg.senderId === me.id ? (
+              <MyMessage key={index} messageText={msg.messageText} />
+            ) : (
+              <Message key={index} senderName={msg.senderName} messageText={msg.messageText} />
+            )
+          ))}
+        </div>
+        <form onSubmit={handleSendMessage} className="input-container">
+          <input type="text" placeholder="Type your message..." value={message} onChange={(e) => setMessage(e.target.value)} className="message-input" />
+          <button type="submit" className="send-button">Send</button>
+        </form>
       </div>
     </div>
   );
-};
-
-export default Chat;
 
 
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import SockJsClient from 'react-stomp';
-// import axios from 'axios';
-
-// const SOCKET_URL = 'http://localhost:8080/ws-message';
-// const API_URL = 'http://localhost:8080/api/messages';
-
-// const Chat = ({ currentUser, otherUser }) => {
-//   const [messages, setMessages] = useState([]);
-//   const [messageText, setMessageText] = useState('');
-//   const [clientRef, setClientRef] = useState(null); // Добавленная строка
-
-//   useEffect(() => {
-//     // Загрузка предыдущих сообщений при монтировании компонента
-//     loadMessages();
-//   }, []);
-
-//   const loadMessages = async () => {
-//     try {
-//       const response = await axios.get(`${API_URL}?senderId=${currentUser.id}&receiverId=${otherUser.id}`);
-//       console.log(123);
-//       setMessages(response.data);
-//     } catch (error) {
-//       console.error('Failed to load messages:', error);
-//     }
-//   };
-
-//   const sendMessage = () => {
-//     if (messageText.trim() === '') return;
-
-//     // Отправка сообщения через WebSocket
-//     const message = {
-//       senderId: currentUser.id,
-//       receiverId: otherUser.id,
-//       messageText: messageText
-//     };
-//     clientRef.sendMessage('/app/sendMessage', JSON.stringify(message));
-
-//     // Добавление отправленного сообщения в локальное состояние
-//     const sentAt = new Date().toISOString();
-//     const newMessage = { sender: currentUser, receiver: otherUser, messageText, sentAt };
-//     setMessages([...messages, newMessage]);
-
-//     // Сброс поля ввода сообщения
-//     setMessageText('');
-//   };
-
-//   // Обработчик входящего сообщения от WebSocket
-//   const onMessageReceived = (msg) => {
-//     const receivedMessage = JSON.parse(msg.body);
-//     setMessages([...messages, receivedMessage]);
-//   };
-
-//   return (
-//     <div>
-//       <h2>Chat with {otherUser.name}</h2>
-//       <div>
-//         {messages.map((msg, index) => (
-//           <div key={index}>
-//             <p>{msg.sender.name}: {msg.messageText}</p>
-//           </div>
-//         ))}
-//       </div>
-//       <input
-//         type="text"
-//         value={messageText}
-//         onChange={(e) => setMessageText(e.target.value)}
-//       />
-//       <button onClick={sendMessage}>Send</button>
-
-//       <SockJsClient
-//         url={SOCKET_URL}
-//         topics={[`/user/${currentUser.id}/queue/messages`]}
-//         onMessage={onMessageReceived}
-//         ref={(client) => (clientRef = client)}
-//       />
-//     </div>
-//   );
-// };
-
-// export default Chat;
+export default ChatPage;

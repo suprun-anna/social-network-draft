@@ -38,21 +38,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(cors -> {
+                .cors(
+//                        AbstractHttpConfigurer::disable
+                        cors -> {
                     cors.configurationSource(request -> {
                         CorsConfiguration corsConfiguration = new CorsConfiguration();
                         corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
                         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                         corsConfiguration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
+                        corsConfiguration.setAllowCredentials(true); // Разрешить передачу куки (cookies)
                         return corsConfiguration;
                     });
-                })
+                }
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**", "/error", "/ws-message/**").permitAll()
                         .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
                         .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+                        .requestMatchers("/v1/auth/**", "/page.html", "/ws/**").permitAll()
                         .anyRequest()
                         .authenticated()
                 ).httpBasic(withDefaults())

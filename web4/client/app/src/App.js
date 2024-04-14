@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/profile/edit" element={<ProfileEditPage />} />
         <Route path="/posts/post/create" element={<CreatePostPage />} />
         <Route path="/posts/post/edit/:id" element={<EditPostPage />} />
-        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/chat/:username" element={<ChatPage />} />
       </Routes>
     </Router>
   );

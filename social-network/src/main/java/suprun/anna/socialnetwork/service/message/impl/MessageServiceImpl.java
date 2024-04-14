@@ -1,6 +1,7 @@
 package suprun.anna.socialnetwork.service.message.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import suprun.anna.socialnetwork.dto.message.MessageDto;
 import suprun.anna.socialnetwork.dto.message.MessageRequestDto;
@@ -21,15 +22,20 @@ public class MessageServiceImpl implements MessageService {
     private final MessageMapper messageMapper;
     private final UserService userService;
 
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
+    public List<MessageDto> getAllMessages() {
+        return messageRepository.findAll().stream()
+                .map(messageMapper::toDto)
+                .toList();
     }
 
-    public List<Message> getAllMessagesBetweenUsers(Long userId1, Long receiverId) {
-        return messageRepository.findAllMessagesBetweenUsers(userId1, receiverId);
+    public List<MessageDto> getAllMessagesBetweenUsers(Long userId1, Long receiverId, Pageable pageable) {
+        return messageRepository.findAllMessagesBetweenUsers(userId1, receiverId, pageable).stream()
+                .map(messageMapper::toDto)
+                .toList();
     }
 
     public MessageDto saveMessage(MessageRequestDto messageDto) {
+        System.out.println("Save message");
         Message message = messageMapper.toModel(messageDto);
         message.setSentAt(LocalDateTime.now());
         User sender = userService.getById(messageDto.senderId());
@@ -37,6 +43,7 @@ public class MessageServiceImpl implements MessageService {
         message.setSender(sender);
         message.setReceiver(receiver);
         message = messageRepository.save(message);
+        System.out.println(message);
         return messageMapper.toDto(message);
     }
 }

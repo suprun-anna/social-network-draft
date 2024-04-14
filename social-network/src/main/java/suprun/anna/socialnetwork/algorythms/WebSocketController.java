@@ -8,14 +8,14 @@ import suprun.anna.socialnetwork.dto.message.MessageDto;
 import suprun.anna.socialnetwork.dto.message.MessageRequestDto;
 import suprun.anna.socialnetwork.service.message.MessageService;
 
-@Controller
-@RequiredArgsConstructor
-public class WebSocketController {
-    private final MessageService messageService;
-
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
-    public MessageDto sendMessage(MessageRequestDto messageDTO) {
-        return messageService.saveMessage(messageDTO);
-    }
-}
+//@Controller
+//@RequiredArgsConstructor
+//public class WebSocketController {
+//    private final MessageService messageService;
+//
+//    @MessageMapping("/chat")
+//    @SendTo("/topic/messages")
+//    public MessageDto sendMessage(MessageRequestDto messageDTO) {
+//        return messageService.saveMessage(messageDTO);
+//    }
+//}
