@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-user-connections
+      author: suprun
+      changes:
+        - createTable:
+            tableName: user_connections
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_user_connections_user_id
+                    references: users(id)
+                    nullable: false
+              - column:
+                  name: follower_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_user_connections_follower_id
+                    references: users(id)
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: user_connections

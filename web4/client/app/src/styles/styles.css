@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    padding: 10px;
+    padding: 10px;
+    height: 100%;
+}
+
+.button {
+    margin: 5px;
+    display: inline-block;
+    min-width: 200px;
+    width: auto;
+    padding: 7px 5%;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    background-color: #007bff;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.username::before{
+    content: '@';
+}
+
+.username {
+    margin: 0;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.username-clickable:hover {
+    color: #007bff;
+}
+
+
+.username-link {
+    text-decoration: none;
+    color: #007bff;
+}

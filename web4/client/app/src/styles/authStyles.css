@@ -1,0 +1,163 @@
+.auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+}
+
+.auth form {
+    width: 300px; 
+    overflow-y: auto; 
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 200px;
+}
+
+.form-group button {
+    width: 100%;
+    height: 30px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-group button:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+
+
+
+
+
+.edit-form {
+    width: 100%;
+    height: 100vh; 
+    overflow-y: scroll;
+}
+
+.edit-form form {
+    margin-top: 40px;
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
+.form-group-edit {
+    width: 300px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group-edit label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    width: 300px;
+}
+
+.form-group-edit input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group-edit textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 200px;
+    width: 300px;
+}
+
+.pic-example {
+    margin: 20px 0;
+    max-width: 400px;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    overflow: hidden; /* Для обрезки избыточной части картинки */
+}
+
+.pic-example img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Сохраняет пропорции и подгоняет изображение */
+}
+
+
+.post-form-group{
+    width: 500px;
+    margin-bottom: 20px;
+}
+
+.button-edit {
+    width: 300px;
+    min-height: 30px;
+    max-height: 30px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 40px;
+}
+
+.button-edit:hover {
+    background-color: #0056b3;
+}
+
+
+.pfp-example {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 20px;
+    background-color: #b9b5b5;
+}
+
+.pfp-example img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

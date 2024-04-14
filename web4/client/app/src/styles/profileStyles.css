@@ -1,0 +1,338 @@
+.profile {
+    display: none;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+
+.profile-info {
+    padding: 25px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: auto;
+    height: calc(100vh - 70px);
+    border: 1px solid #ccc;
+
+}
+
+.profile-info-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    min-height: 120px;
+    border-radius: 50%;
+    margin-right: 15px;
+    background-color: #b9b5b5;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.follow-info {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-end;
+}
+
+.follow-info-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.followers:not(:last-child) {
+    margin-right: 5px;
+}
+
+.bio {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.user-info-bio {
+    width: 100%;
+}
+
+.followers {
+    margin: 5px 0;
+}
+
+.follow-info-button:hover {
+    color: #007bff;
+}
+
+.display-name,
+.bio {
+    margin: 0;
+}
+
+.main {
+    flex: 1;
+    overflow-y: auto;
+    margin: 0 10px;
+    width: 60%;
+    min-width: 500px;
+    height: 100vh;
+    padding-top: -15px;
+}
+
+
+.no-posts-message {
+    /* position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+
+
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+}
+
+.no-posts-message-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.posts {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.post {
+    width: calc(33.33% - 20px);
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.post:hover {
+    cursor: pointer;
+}
+
+.post:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+.post .post-photo {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: white;
+    text-align: center;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* .post .post-photo img {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    position: relative;
+    object-fit: contain;
+} */
+
+
+/* РАСТЯГИВАНИЕ КАРТИНКИ */
+.post .post-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+@media screen and (max-width: 768px) {
+    .posts {
+        justify-content: center;
+    }
+
+    .post {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .post {
+        width: 100%;
+    }
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.modal ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow-y: scroll;
+    max-height: 350px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px 50px;
+    border: 1px solid #888;
+    width: 45%;
+    border-radius: 5px;
+
+}
+
+.modal-content h3 {
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.removable {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.remove-button {
+    float: right;
+    height: 30px;
+    font-size: 14px;
+    width: 70px;
+    color: #fff;
+    background-color: #007bff;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.close {
+    margin-top: 10px;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#followersList,
+#followingsList {
+    padding: 0;
+    margin: 0;
+}
+
+.user-item {
+    list-style-type: none;
+    margin: 5px 0;
+    display: inline-block;
+    width: max-content;
+}
+
+.user-item a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+.small-profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-color: #b9b5b5;
+    overflow: hidden;
+}
+
+.small-profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#follower-info-button::after {
+    content: '';
+    margin-right: 40px;
+}
+
+
+
+
+
+
+
+
+
+
