@@ -22,4 +22,9 @@ public class Dialog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user2_id", nullable = false)
     private User user2;
+
+    public Dialog(Long id) {
+        this.id = id;
+    }
+
 }

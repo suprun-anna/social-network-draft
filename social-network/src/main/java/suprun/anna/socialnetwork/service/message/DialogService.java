@@ -1,12 +1,11 @@
 package suprun.anna.socialnetwork.service.message;
 
-import suprun.anna.socialnetwork.model.Dialog;
-
 import java.util.List;
 
 public interface DialogService {
-    Long findDialogBetweenUsers(Long user1Id, Long user2Id);
+//    Long createDialog(Long user1Id, Long user2Id);
 
-    List<Long> findAllDialogsByUserId(Long userId);
+    Long getDialogBetweenUsers(Long user1Id, Long user2Id);
 
+    List<Long> getAllDialogsByUserId(Long userId);
 }

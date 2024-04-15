@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import suprun.anna.socialnetwork.dto.message.MessageDto;
 import suprun.anna.socialnetwork.model.Comment;
 import suprun.anna.socialnetwork.model.Message;
 
@@ -17,4 +18,9 @@ public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpec
             "OR (m.sender.id = :receiverId AND m.receiver.id = :senderId) " +
             "ORDER BY m.sentAt DESC")
     List<Message> findAllMessagesBetweenUsers(Long senderId, Long receiverId, Pageable pageable);
+
+    @Query("SELECT m FROM Message m WHERE " +
+            "m.dialog.id = :dialogId " +
+            "ORDER BY m.sentAt DESC")
+    List<Message> findAllMessagesBetweenUsersByDialogId(Long dialogId, Pageable pageable);
 }

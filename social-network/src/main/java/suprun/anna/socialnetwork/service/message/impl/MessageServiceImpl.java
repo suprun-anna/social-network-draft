@@ -8,7 +8,6 @@ import suprun.anna.socialnetwork.dto.message.MessageDto;
 import suprun.anna.socialnetwork.dto.message.MessageRequestDto;
 import suprun.anna.socialnetwork.mapper.MessageMapper;
 import suprun.anna.socialnetwork.model.Message;
-import suprun.anna.socialnetwork.model.User;
 import suprun.anna.socialnetwork.repository.Message.MessageRepository;
 import suprun.anna.socialnetwork.service.message.MessageService;
 import suprun.anna.socialnetwork.service.user.UserService;
@@ -29,8 +28,15 @@ public class MessageServiceImpl implements MessageService {
                 .toList();
     }
 
-    public List<MessageDto> getAllMessagesBetweenUsers(Long senderId, Long receiverId, Pageable pageable) {
+    public List<MessageDto> getAllMessagesBetweenUsersByDialogId(Long senderId, Long receiverId, Pageable pageable) {
         return messageRepository.findAllMessagesBetweenUsers(senderId, receiverId, pageable).stream()
+                .map(messageMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<MessageDto> getAllMessagesBetweenUsersByDialogId(Long dialogId, Pageable pageable) {
+        return messageRepository.findAllMessagesBetweenUsersByDialogId(dialogId, pageable).stream()
                 .map(messageMapper::toDto)
                 .toList();
     }
@@ -39,10 +45,6 @@ public class MessageServiceImpl implements MessageService {
         System.out.println("Save message");
         Message message = messageMapper.toModel(messageDto);
         message.setSentAt(LocalDateTime.now());
-        User sender = userService.getById(messageDto.senderId());
-        User receiver = userService.getById(messageDto.receiverId());
-        message.setSender(sender);
-        message.setReceiver(receiver);
         message = messageRepository.save(message);
         System.out.println(message);
         return messageMapper.toDto(message);
@@ -52,5 +54,12 @@ public class MessageServiceImpl implements MessageService {
     public MessageDto getLastMessage(Long senderId, Long receiverId) {
         return messageMapper.toDto(messageRepository.findAllMessagesBetweenUsers(senderId, receiverId,
                 PageRequest.of(0, 1)).get(0));
+    }
+
+    @Override
+    public MessageDto getLastMessageByDialogId(Long dialogId) {
+        List<Message> messages = messageRepository.findAllMessagesBetweenUsersByDialogId(dialogId,
+                PageRequest.of(0, 1));
+        return messages.size() > 0 ? messageMapper.toDto(messages.get(0)) : null;
     }
 }

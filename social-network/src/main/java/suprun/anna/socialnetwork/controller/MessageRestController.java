@@ -1,7 +1,6 @@
 package suprun.anna.socialnetwork.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import suprun.anna.socialnetwork.dto.message.MessageDto;
+import suprun.anna.socialnetwork.service.message.DialogService;
 import suprun.anna.socialnetwork.service.message.MessageService;
 
 import java.util.List;
@@ -18,16 +18,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageRestController {
     private final MessageService messageService;
+    private final DialogService dialogService;
+
+    @GetMapping("/dialog/getAll")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<MessageDto> getAllMessagesFromDialog(@RequestParam Long dialogId, Pageable pageable) {
+        return messageService.getAllMessagesBetweenUsersByDialogId(dialogId, pageable);
+    }
+
+    @GetMapping("/dialog")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Long getDialog(@RequestParam Long user1Id, @RequestParam Long user2Id) {
+        return dialogService.getDialogBetweenUsers(user1Id, user2Id);
+    }
+
+    @GetMapping("/allDialogs")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<Long> getAllDialogs(@RequestParam Long userId) {
+        return dialogService.getAllDialogsByUserId(userId);
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<MessageDto> getAllMessages(@RequestParam Long senderId, @RequestParam Long receiverId, Pageable pageable) {
-        return messageService.getAllMessagesBetweenUsers(senderId, receiverId, pageable);
+        return messageService.getAllMessagesBetweenUsersByDialogId(senderId, receiverId, pageable);
     }
 
     @GetMapping("/last-message")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public MessageDto getLastMessage(@RequestParam Long senderId, @RequestParam Long receiverId) {
-        return messageService.getLastMessage(senderId, receiverId);
+    public MessageDto getLastMessage(@RequestParam Long dialogId) {
+        System.out.println("LAST");
+        return messageService.getLastMessageByDialogId(dialogId);
     }
 }

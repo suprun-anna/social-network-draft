@@ -155,7 +155,8 @@ const Comments = ({ post }) => {
                                 comment={comment}
                                 me={me}
                                 onDeleteComment={handleDeleteComment}
-                                onEditComment={handleEditComment} />
+                                onEditComment={handleEditComment}
+                                post={post} />
                             <hr />
                         </React.Fragment>
                     ))}

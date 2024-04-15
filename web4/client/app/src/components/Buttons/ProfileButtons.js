@@ -2,13 +2,13 @@ import React from 'react';
 import FollowsButtons from './FollowsButtons';
 import LogoutButton from '../../pages/Authentication/LogoutButton';
 
-const ProfileButtons = ({ userIsMe, userId, status, followSuccessCallback, unfollowSuccessCallback }) => {
+const ProfileButtons = ({ userIsMe, user, status, followSuccessCallback, unfollowSuccessCallback }) => {
     const handleFollowSuccess = () => {
-        followSuccessCallback(userId);
+        followSuccessCallback(user.id);
     };
 
     const handleUnfollowSuccess = () => {
-        unfollowSuccessCallback(userId);
+        unfollowSuccessCallback(user.id);
     };
 
     return (
@@ -19,15 +19,15 @@ const ProfileButtons = ({ userIsMe, userId, status, followSuccessCallback, unfol
                     <LogoutButton />
                 </>
             )}
-            {!userIsMe && userId && (
+            {!userIsMe && user && (
                 <>
                     <FollowsButtons
-                        userId={userId}
+                        userId={user.id}
                         status={status}
                         followSuccessCallback={handleFollowSuccess}
                         unfollowSuccessCallback={handleUnfollowSuccess}
                     />
-                    <button className='button'>Message</button>
+                    <a href={`/chat/${user.username}`} className='button'>Message</a>
                 </>
             )}
         </div>
@@ -35,31 +35,3 @@ const ProfileButtons = ({ userIsMe, userId, status, followSuccessCallback, unfol
 };
 
 export default ProfileButtons;
-
-
-
-
-
-
-
-
-
-// const ProfileButtons = (userIsMe, userId, status, follow, unfollow) => {
-//     return (
-//         <div className='buttons'>
-//             {(userIsMe === true) && (
-//                 <a id='edit-button' href={'/profile/edit'} className='button'>Edit profile</a>
-//             )}
-//             {(userId && userIsMe === false) && (
-//                 <FollowsButtons
-//                     userId={userId}
-//                     status={status}
-//                     follow={follow}
-//                     unfollow={unfollow}
-//                 />
-//             )}
-//         </div>
-//     )
-// };
-
-// export default ProfileButtons;

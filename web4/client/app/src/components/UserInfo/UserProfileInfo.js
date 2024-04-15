@@ -120,7 +120,7 @@ const UserProfileInfo = ({
             {user && status &&
                 <div className='buttons'>
                     <ProfileButtons
-                        userId={user.id}
+                        user={user}
                         status={statusMap[status]}
                         userIsMe={userIsMe}
                         followSuccessCallback={handleFollowSuccess}

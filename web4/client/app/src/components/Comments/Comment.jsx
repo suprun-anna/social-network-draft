@@ -7,7 +7,7 @@ import LinkifiedUsername from '../../util/LinkifiedUsername';
 
 
 
-const Comment = ({ comment, me, onDeleteComment, onEditComment }) => {
+const Comment = ({ comment, me, onDeleteComment, onEditComment, post }) => {
     const isMyComment = comment.userId === me.id;
 
 
@@ -44,17 +44,17 @@ const Comment = ({ comment, me, onDeleteComment, onEditComment }) => {
 
 
     const handleEditButtonClick = () => {
-        setEditMode(true); 
+        setEditMode(true);
     };
 
     const handleCancelEdit = () => {
-        setEditMode(false); 
-        setEditedText(comment.text); 
+        setEditMode(false);
+        setEditedText(comment.text);
     };
 
     const handleSaveEdit = async () => {
         try {
-            await onEditComment(comment.id, editedText); 
+            await onEditComment(comment.id, editedText);
             setEditMode(false);
         } catch (error) {
             console.error('Error editing comment:', error);
@@ -112,21 +112,23 @@ const Comment = ({ comment, me, onDeleteComment, onEditComment }) => {
                 </div>
             )}
             <div className='time'>{timeSince(comment.leftAt)}</div>
-            <div className='comment-actions'>
-                <button className='action-button' onClick={() => handleMenuToggle(comment.id)}>⋮</button>
-                {menuOpen === comment.id && (
-                    <div className="comment-menu">
-                        {isMyComment && !editMode && <button onClick={handleEditButtonClick}>Edit</button>}
-                        {editMode && !editMode && (
-                            <>
-                                <button onClick={handleSaveEdit}>Save</button>
-                                <button onClick={handleCancelEdit}>Cancel</button>
-                            </>
-                        )}
-                        <button onClick={() => onDeleteComment(comment.id)}>Delete</button>
-                    </div>
-                )}
-            </div>
+            {(post.userId === me.id || isMyComment) &&
+                <div className='comment-actions'>
+                    <button className='action-button' onClick={() => handleMenuToggle(comment.id)}>⋮</button>
+                    {menuOpen === comment.id && (
+                        <div className="comment-menu">
+                            {isMyComment && !editMode && <button onClick={handleEditButtonClick}>Edit</button>}
+                            {editMode && !editMode && (
+                                <>
+                                    <button onClick={handleSaveEdit}>Save</button>
+                                    <button onClick={handleCancelEdit}>Cancel</button>
+                                </>
+                            )}
+                            {(post.userId === me.id || isMyComment )&& <button onClick={() => onDeleteComment(comment.id)}>Delete</button>}
+                        </div>
+                    )}
+                </div>
+            }
         </div>
     );
 };

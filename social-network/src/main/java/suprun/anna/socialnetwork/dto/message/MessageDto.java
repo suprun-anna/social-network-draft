@@ -11,6 +11,7 @@ public record MessageDto(
         String receiverName,
         String receiverAvatar,
         String messageText,
-        LocalDateTime sentAt
+        LocalDateTime sentAt,
+        Long dialogId
         ) {
 }
