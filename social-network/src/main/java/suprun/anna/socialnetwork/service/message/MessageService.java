@@ -10,7 +10,9 @@ import java.util.List;
 public interface MessageService {
     List<MessageDto> getAllMessages();
 
-    List<MessageDto> getAllMessagesBetweenUsers(Long userId1, Long receiverId, Pageable pageable);
+    List<MessageDto> getAllMessagesBetweenUsers(Long senderId, Long receiverId, Pageable pageable);
 
     MessageDto saveMessage(MessageRequestDto messageDto);
+
+    MessageDto getLastMessage(Long senderId, Long receiverId);
 }

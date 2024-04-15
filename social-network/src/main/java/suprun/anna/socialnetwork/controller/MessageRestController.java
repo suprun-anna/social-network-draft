@@ -24,4 +24,10 @@ public class MessageRestController {
     public List<MessageDto> getAllMessages(@RequestParam Long senderId, @RequestParam Long receiverId, Pageable pageable) {
         return messageService.getAllMessagesBetweenUsers(senderId, receiverId, pageable);
     }
+
+    @GetMapping("/last-message")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public MessageDto getLastMessage(@RequestParam Long senderId, @RequestParam Long receiverId) {
+        return messageService.getLastMessage(senderId, receiverId);
+    }
 }

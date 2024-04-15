@@ -11,6 +11,7 @@ import CreatePostPage from './pages/Posts/CreatePostPage';
 import EditPostPage from './pages/Posts/EditPostPage';
 import Chat from './Messaging/Chat';
 import ChatPage from './Messaging/ChatPage';
+import ChatListPage from './Messaging/ChatListPage';
 
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/profile/edit" element={<ProfileEditPage />} />
         <Route path="/posts/post/create" element={<CreatePostPage />} />
         <Route path="/posts/post/edit/:id" element={<EditPostPage />} />
+        <Route path="/chat" element={<ChatListPage />} />
         <Route path="/chat/:username" element={<ChatPage />} />
       </Routes>
     </Router>

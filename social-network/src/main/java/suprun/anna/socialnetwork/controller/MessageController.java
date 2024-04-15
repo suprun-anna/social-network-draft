@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import suprun.anna.socialnetwork.dto.message.MessageDto;
 import suprun.anna.socialnetwork.dto.message.MessageRequestDto;
 import suprun.anna.socialnetwork.model.Message;
+import suprun.anna.socialnetwork.service.message.DialogService;
 import suprun.anna.socialnetwork.service.message.MessageService;
 import suprun.anna.socialnetwork.service.user.UserService;
 
@@ -27,6 +28,7 @@ public class MessageController {
 	private final SimpMessagingTemplate simpMessagingTemplate;
 	private final UserService userService;
 	private final MessageService messageService;
+	private final DialogService dialogService;
 
 	@MessageMapping("/chat")
 	public void chat(@Payload MessageRequestDto message) {

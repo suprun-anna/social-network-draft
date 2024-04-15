@@ -1,6 +1,7 @@
 package suprun.anna.socialnetwork.service.message.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import suprun.anna.socialnetwork.dto.message.MessageDto;
@@ -28,8 +29,8 @@ public class MessageServiceImpl implements MessageService {
                 .toList();
     }
 
-    public List<MessageDto> getAllMessagesBetweenUsers(Long userId1, Long receiverId, Pageable pageable) {
-        return messageRepository.findAllMessagesBetweenUsers(userId1, receiverId, pageable).stream()
+    public List<MessageDto> getAllMessagesBetweenUsers(Long senderId, Long receiverId, Pageable pageable) {
+        return messageRepository.findAllMessagesBetweenUsers(senderId, receiverId, pageable).stream()
                 .map(messageMapper::toDto)
                 .toList();
     }
@@ -45,5 +46,11 @@ public class MessageServiceImpl implements MessageService {
         message = messageRepository.save(message);
         System.out.println(message);
         return messageMapper.toDto(message);
+    }
+
+    @Override
+    public MessageDto getLastMessage(Long senderId, Long receiverId) {
+        return messageMapper.toDto(messageRepository.findAllMessagesBetweenUsers(senderId, receiverId,
+                PageRequest.of(0, 1)).get(0));
     }
 }

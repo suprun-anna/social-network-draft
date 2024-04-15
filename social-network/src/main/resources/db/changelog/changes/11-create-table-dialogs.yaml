@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-dialogs-table
+      author: suprun
+      changes:
+        - createTable:
+            tableName: dialogs
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user1_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user2_id
+                  type: bigint
+                  constraints:
+                    nullable: false

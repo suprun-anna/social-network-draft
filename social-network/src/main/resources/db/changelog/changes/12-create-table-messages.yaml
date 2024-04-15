@@ -32,3 +32,8 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: dialog_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false

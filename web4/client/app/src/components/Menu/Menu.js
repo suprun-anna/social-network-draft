@@ -23,7 +23,7 @@ const Menu = () => {
                     <a href="/posts/post/create">Create post</a>
                 </li>
                 <li>
-                    <a href="#">Messages</a>
+                    <a href="/chat">Messages</a>
                 </li>
             </ul>
         </div>

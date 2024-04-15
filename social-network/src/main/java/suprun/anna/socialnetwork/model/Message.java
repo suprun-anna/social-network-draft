@@ -32,6 +32,10 @@ public class Message {
     @Column(name = "sent_at", nullable = false)
     private LocalDateTime sentAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dialog_id", nullable = false)
+    private Dialog dialog;
+
     @Override
     public String toString() {
         return "Message{" +
