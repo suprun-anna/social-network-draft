@@ -4,14 +4,17 @@ import jakarta.persistence.EntityNotFoundException;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import suprun.anna.socialnetwork.dto.user.UserInfoResponseDto;
+import suprun.anna.socialnetwork.dto.user.UserRedirectResponseDto;
 import suprun.anna.socialnetwork.dto.user.UserRegistrationRequestDto;
 import suprun.anna.socialnetwork.dto.user.UserResponseDto;
 import suprun.anna.socialnetwork.exception.RegistrationException;
@@ -113,6 +116,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoResponseDto getUserInfo(User user) {
         return userMapper.toInfoResponseDto(user);
+    }
+
+    @Override
+    public List<UserRedirectResponseDto> findByPartialUsername(String username, Pageable pageable) {
+        return userRepository.findByPartialUsername(username, pageable).stream()
+                .map(userMapper::toRedirectResponseDto)
+                .toList();
     }
 
     private boolean isValidUsername(String username) {

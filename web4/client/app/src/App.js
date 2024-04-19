@@ -12,6 +12,8 @@ import EditPostPage from './pages/Posts/EditPostPage';
 import Chat from './Messaging/Chat';
 import ChatPage from './Messaging/ChatPage';
 import ChatListPage from './Messaging/ChatListPage';
+import UserSearch from './components/Search/UserSearch';
+import SearchPage from './pages/Profile/SearchPage';
 
 
 const App = () => {
@@ -31,6 +33,7 @@ const App = () => {
         <Route path="/posts/post/edit/:id" element={<EditPostPage />} />
         <Route path="/chat" element={<ChatListPage />} />
         <Route path="/chat/:username" element={<ChatPage />} />
+        <Route path="/search" element={<SearchPage />} />
       </Routes>
     </Router>
   );
