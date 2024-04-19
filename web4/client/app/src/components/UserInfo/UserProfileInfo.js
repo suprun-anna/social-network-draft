@@ -5,6 +5,8 @@ import Modal from '../Modal/ModalWindow';
 import ProfileButtons from '../../components/Buttons/ProfileButtons';
 import { sendGetRequest } from '../../util/requests';
 import { fetchImage } from '../../util/fetchImage';
+import UserItem from './UserItem';
+import { follow, unfollow } from '../../util/follows';
 
 
 const SERVER = 'http://localhost:8080/api';
@@ -28,7 +30,7 @@ const UserProfileInfo = ({
 
     const [followersOpen, setFollowersOpen] = useState(false);
     const [followingsOpen, setFollowingsOpen] = useState(false);
-
+    const [recommendations, setRecommendations] = useState([]);
 
     useEffect(() => {
         const fetchProfilePicture = async () => {
@@ -48,7 +50,24 @@ const UserProfileInfo = ({
             setStatus(status);
         };
         fetchStatus();
-    }, []);
+    }, [user]);
+
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            const recommendations = (await sendGetRequest(`${SERVER}/follow/recommend`)).data;
+            if (recommendations.length > 0) {
+                const updatedData = await Promise.all(recommendations.map(async (row) => {
+                    if (!row.profilePictureURL) {
+                        const imageURL = await fetchImage(row.profilePicture);
+                        row.profilePictureURL = imageURL;
+                    }
+                    return row;
+                }));
+                setRecommendations(prevData => [...prevData, ...updatedData]);
+            }
+        };
+        fetchRecommendations();
+    }, [user]);
 
 
     async function getConnections(request, error = 'Error fetching connections:') {
@@ -71,22 +90,53 @@ const UserProfileInfo = ({
         setFollowingsOpen(false);
     };
 
-    const handleFollowSuccess = async () => {
-        const fCount = followerCount + 1;
-        setFollowerCount(fCount);
-        setStatus(await getConnections(`${SERVER}/follow/checkConnection?userId=${user.id}`));
+    const handleFollowSuccess = async (id) => {
+        if (!userIsMe) {
+            const fCount = followerCount + 1;
+            setFollowerCount(fCount);
+            setStatus(await getConnections(`${SERVER}/follow/checkConnection?userId=${user.id}`));
+        }
+        else {
+            const fCount = followingCount + 1;
+            setFollowingCount(fCount);
+            const updatedRecommendations = recommendations.map(rec => {
+                if (id && rec.id === id) {
+                    return { ...rec, followed: true };
+                }
+                return rec;
+            });
+            setRecommendations(updatedRecommendations);
+        }
     };
 
-    const handleUnfollowSuccess = async () => {
-        const fCount = followerCount - 1;
-        setFollowerCount(fCount);
-        setStatus(await getConnections(`${SERVER}/follow/checkConnection?userId=${user.id}`));
+    const handleUnfollowSuccess = async (id) => {
+        if (!userIsMe) {
+            const fCount = followerCount - 1;
+            setFollowerCount(fCount);
+            setStatus(await getConnections(`${SERVER}/follow/checkConnection?userId=${user.id}`));
+        }
+        else {
+            const fCount = followingCount - 1;
+            setFollowingCount(fCount);
+            const updatedRecommendations = recommendations.map(rec => {
+                if (id && rec.id === id) {
+                    return { ...rec, followed: false };
+                }
+                return rec;
+            });
+            setRecommendations(updatedRecommendations);
+        }
     };
 
     const handleForceUnfollowSuccess = async () => {
         const fCount = followingCount - 1;
         setFollowingCount(fCount);
         setStatus(await getConnections(`${SERVER}/follow/checkConnection?userId=${user.id}`));
+    };
+
+    const removeRecommendation = (id) => {
+        const updatedRecommendations = recommendations.filter(user => user.id !== id);
+        setRecommendations(updatedRecommendations);
     };
 
     return (
@@ -127,6 +177,24 @@ const UserProfileInfo = ({
                         unfollowSuccessCallback={handleUnfollowSuccess}
                     />
                 </div>
+            }
+
+            {user && recommendations && userIsMe &&
+                <ul className='recomms'>
+                    <h4>Recommendations</h4>
+                    {recommendations.map((rec) => (
+                        <div key={rec.id} className='recom'>
+                            <UserItem user={rec} />
+                            <div className='act'>
+                                {!rec.followed && <button className='smol-button'
+                                    onClick={() => follow(rec.id, handleFollowSuccess(rec.id))}>Follow</button>}
+                                {rec.followed && <button className='smol-button'
+                                    onClick={() => unfollow(rec.id, handleUnfollowSuccess(rec.id))}>Unfollow</button>}
+                                <button className='smol-button' onClick={() => removeRecommendation(rec.id)}>x</button>
+                            </div>
+                        </div>
+                    ))}
+                </ul>
             }
 
             {followersOpen &&

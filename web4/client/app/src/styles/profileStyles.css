@@ -329,9 +329,45 @@
 
 
 
+.recomms{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 25px;
+    border-radius: 10px;
+    border: 1px solid rgb(196, 196, 196);
+    height: 300px;
+    overflow-y: auto;
+    align-items: center;
+}
 
+.smol-button{
+    /* width: 30px; */
+    height: 30px;
+    float: right;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    margin-left: 5px;
+}
 
+.recom{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
 
+.act{
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
 
 
 

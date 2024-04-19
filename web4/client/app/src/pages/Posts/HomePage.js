@@ -16,12 +16,26 @@ const HomePage = () => {
     const [allLoaded, setAllLoaded] = useState(false);
     const size = 5;
     const navigate = useNavigate();
+    const [recommendations, setRecommendations] = useState([]);
+    const [user, setUser] = useState(null);
+
+    async function getUserInfo(request, error = 'Error fetching user data: ') {
+        try{
+            const response = await sendGetRequest(request, error);
+            return response.data;
+        } catch (e) {
+            navigate('/login');
+        }
+    }
+
 
     useEffect(() => {
         const fetchUserData = async () => {
             if (localStorage.getItem('token') === null) {
                 navigate('/login');
             } else {
+                const user = (await getUserInfo(`${SERVER}/user/me`));
+                setUser(user);
                 if (allLoaded) return;
                 try {
                     const newData = await getPosts(`${SERVER}/feed/get?page=${currentPage}&size=${size}`);
@@ -68,6 +82,23 @@ const HomePage = () => {
     return (
         <div className="container">
             <Menu />
+            {user && recommendations && 
+                <ul className='recomms'>
+                    <h4>Recommendations</h4>
+                    {recommendations.map((rec) => (
+                        <div key={rec.id} className='recom'>
+                            <UserItem user={rec} />
+                            <div className='act'>
+                                {!rec.followed && <button className='smol-button'
+                                    onClick={() => follow(rec.id, handleFollowSuccess(rec.id))}>Follow</button>}
+                                {rec.followed && <button className='smol-button'
+                                    onClick={() => unfollow(rec.id, handleUnfollowSuccess(rec.id))}>Unfollow</button>}
+                                <button className='smol-button' onClick={() => removeRecommendation(rec.id)}>x</button>
+                            </div>
+                        </div>
+                    ))}
+                </ul>
+            }
             {posts && posts.length > 0 ? (
                 <div className='posts-container' ref={containerRef}>
                     {posts.map((post) => (

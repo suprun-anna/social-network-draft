@@ -37,9 +37,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto userDto) {
-        if (userRepository.findByEmail(userDto.email()).isPresent()) {
-            throw new RegistrationException("Can't register user with email "
-                    + userDto.email());
+        if (userRepository.findByEmail(userDto.email()).isPresent()
+                || userRepository.findByUsername(userDto.username()).isPresent()) {
+            throw new RegistrationException("Can't register user with email=" + userDto.email()
+                    + " or username=" + userDto.username());
         }
         User user = userMapper.toModel(userDto);
         user.setDisplayName(user.getName());

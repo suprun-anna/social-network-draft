@@ -1,9 +1,11 @@
 package suprun.anna.socialnetwork.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import suprun.anna.socialnetwork.dto.user.UserResponseDto;
 import suprun.anna.socialnetwork.dto.userconnection.UserConnectionDto;
 import suprun.anna.socialnetwork.dto.user.UserRedirectResponseDto;
 import suprun.anna.socialnetwork.mapper.UserMapper;
@@ -14,9 +16,8 @@ import suprun.anna.socialnetwork.repository.user.UserRepository;
 import suprun.anna.socialnetwork.service.user.UserConnectionService;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,7 @@ public class UserConnectionServiceImpl implements UserConnectionService {
     private final UserConnectionRepository userConnectionRepository;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final Random random = new Random();
 
     @Override
     public List<UserRedirectResponseDto> getAllFollowers(Long id, Pageable pageable) {
@@ -33,10 +35,69 @@ public class UserConnectionServiceImpl implements UserConnectionService {
     }
 
     @Override
+    public Set<UserResponseDto> getRandomFollowersOfFollowings(User user) {
+        Set<User> result = new HashSet<>();
+        int pageSize = 10;
+        List<User> followings = getRandomFollowings(user, pageSize);
+        if (followings.isEmpty()) {
+            return getRandomUsers(followings).stream().map(userMapper::toDto).collect(Collectors.toSet());
+        }
+        System.out.println(11111111);
+        for (User u : followings){
+            System.out.println(u.getName() + " " + u.getId());
+        }
+        System.out.println();
+        for (User randomFollowing : followings) {
+            List<User> randomFollowers = getRandomFollowings(randomFollowing, pageSize);
+            int size = randomFollowers.size();
+            int from, to;
+            if (size == 0) continue;
+            else if (size == 1 || size == 2) {
+                from = size / 2;
+                to = 1;
+            } else {
+                from = random.nextInt(randomFollowers.size() - 2);
+                to = random.nextInt(from + 1, randomFollowers.size());
+            }
+            List<User> users = randomFollowers.subList(from, to);
+            result.addAll(users);
+        }
+        if (result.size() < 5) {
+            result.addAll(getRandomUsers(followings));
+        }
+        System.out.println(222222);
+        for (User u : result){
+            System.out.println(u.getName() + " " + u.getId());
+        }
+        System.out.println(11111111);
+
+        return result.stream()
+                .filter(u -> followings.stream().noneMatch(f -> f.getId().equals(u.getId())))
+                .map(userMapper::toDto)
+                .collect(Collectors.toSet());
+    }
+
+    private List<User> getRandomFollowings(User user, int pageSize){
+        int totalFollowers = user.getFollowingCount();
+        int randomPageNumber = (int) (Math.random() * (totalFollowers / 10));
+        Pageable pageable = PageRequest.of(randomPageNumber, pageSize);
+        return userConnectionRepository.getAllFollowings(user.getId(), pageable);
+    }
+
+    private List<User> getRandomUsers(List<User> existingUsers){
+        List<User> all = userRepository.findAll();
+        int size = all.size();
+        int from = size > 10 ? random.nextInt( size - 10) : 0;
+        int to = size > 10 ? random.nextInt(from + 10) : size;
+        List<User> users = all.subList(from, to);
+        users.removeAll(existingUsers);
+        return users;
+    }
+
+    @Override
     public List<UserRedirectResponseDto> getAllFollowings(Long id, Pageable pageable) {
         return userConnectionRepository.getAllFollowings(id, pageable).stream()
-                .map(userMapper::toRedirectResponseDto)
-                .toList();
+                .map(userMapper::toRedirectResponseDto).toList();
     }
 
     @Override

@@ -21,10 +21,10 @@ const ProfilePage = () => {
                 navigate('/login');
             } else {
                 const userIdentificator = window.location.pathname.split('/').pop();
-                const me = await getUserInfo(`${SERVER}/user/me`);
+                const me = (await getUserInfo(`${SERVER}/user/me`));
                 const userIsMe = userIdentificator === 'me' || userIdentificator == me.username;
                 setUserIsMe(userIsMe);
-                const user = userIsMe ? me : await getUserInfo(`${SERVER}/user?username=${userIdentificator}`);
+                const user = userIsMe ? me : (await getUserInfo(`${SERVER}/user?username=${userIdentificator}`));
                 setUser(user);
             }
         };
@@ -34,10 +34,13 @@ const ProfilePage = () => {
 
 
     async function getUserInfo(request, error = 'Error fetching user data: ') {
-        return (await sendGetRequest(request, error)).data;
+        try{
+            const response = await sendGetRequest(request, error);
+            return response.data;
+        } catch (e) {
+            navigate('/login');
+        }
     }
-
-
 
 
     return (

@@ -8,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import suprun.anna.socialnetwork.dto.user.UserResponseDto;
 import suprun.anna.socialnetwork.dto.userconnection.UserConnectionDto;
 import suprun.anna.socialnetwork.dto.user.UserRedirectResponseDto;
 import suprun.anna.socialnetwork.model.User;
 import suprun.anna.socialnetwork.model.UserConnection;
 import suprun.anna.socialnetwork.service.user.UserConnectionService;
 import java.util.List;
+import java.util.Set;
 
 @Tag(name = "Following process manager", description = "Endpoints for following process managing")
 @RequiredArgsConstructor
@@ -66,5 +68,12 @@ public class FollowersController {
         System.out.println("Check following");
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(userConnectionService.getConnectionStatus(user.getId(), userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/recommend")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Set<UserResponseDto> recommendUser(Authentication authentication) {
+        System.out.println("recommend");
+        return userConnectionService.getRandomFollowersOfFollowings((User) authentication.getPrincipal());
     }
 }
