@@ -7,6 +7,7 @@ import { sendGetRequest } from '../../util/requests';
 import { fetchImage } from '../../util/fetchImage';
 import UserItem from './UserItem';
 import { follow, unfollow } from '../../util/follows';
+import Recommendations from './Recommendations';
 
 
 const SERVER = 'http://localhost:8080/api';
@@ -52,23 +53,6 @@ const UserProfileInfo = ({
         fetchStatus();
     }, [user]);
 
-    useEffect(() => {
-        const fetchRecommendations = async () => {
-            const recommendations = (await sendGetRequest(`${SERVER}/follow/recommend`)).data;
-            if (recommendations.length > 0) {
-                const updatedData = await Promise.all(recommendations.map(async (row) => {
-                    if (!row.profilePictureURL) {
-                        const imageURL = await fetchImage(row.profilePicture);
-                        row.profilePictureURL = imageURL;
-                    }
-                    return row;
-                }));
-                setRecommendations(prevData => [...prevData, ...updatedData]);
-            }
-        };
-        fetchRecommendations();
-    }, [user]);
-
 
     async function getConnections(request, error = 'Error fetching connections:') {
         return (await sendGetRequest(request, error)).data;
@@ -90,7 +74,7 @@ const UserProfileInfo = ({
         setFollowingsOpen(false);
     };
 
-    const handleFollowSuccess = async (id) => {
+    const handleFollowSuccess = async () => {
         if (!userIsMe) {
             const fCount = followerCount + 1;
             setFollowerCount(fCount);
@@ -99,17 +83,10 @@ const UserProfileInfo = ({
         else {
             const fCount = followingCount + 1;
             setFollowingCount(fCount);
-            const updatedRecommendations = recommendations.map(rec => {
-                if (id && rec.id === id) {
-                    return { ...rec, followed: true };
-                }
-                return rec;
-            });
-            setRecommendations(updatedRecommendations);
         }
     };
 
-    const handleUnfollowSuccess = async (id) => {
+    const handleUnfollowSuccess = async () => {
         if (!userIsMe) {
             const fCount = followerCount - 1;
             setFollowerCount(fCount);
@@ -118,13 +95,6 @@ const UserProfileInfo = ({
         else {
             const fCount = followingCount - 1;
             setFollowingCount(fCount);
-            const updatedRecommendations = recommendations.map(rec => {
-                if (id && rec.id === id) {
-                    return { ...rec, followed: false };
-                }
-                return rec;
-            });
-            setRecommendations(updatedRecommendations);
         }
     };
 
@@ -132,11 +102,6 @@ const UserProfileInfo = ({
         const fCount = followingCount - 1;
         setFollowingCount(fCount);
         setStatus(await getConnections(`${SERVER}/follow/checkConnection?userId=${user.id}`));
-    };
-
-    const removeRecommendation = (id) => {
-        const updatedRecommendations = recommendations.filter(user => user.id !== id);
-        setRecommendations(updatedRecommendations);
     };
 
     return (
@@ -179,7 +144,7 @@ const UserProfileInfo = ({
                 </div>
             }
 
-            {user && recommendations && userIsMe &&
+            {/* {user && recommendations && userIsMe &&
                 <ul className='recomms'>
                     <h4>Recommendations</h4>
                     {recommendations.map((rec) => (
@@ -195,6 +160,12 @@ const UserProfileInfo = ({
                         </div>
                     ))}
                 </ul>
+            } */}
+
+            {userIsMe && <Recommendations
+                user={user}
+                handleFollowSuccess={handleFollowSuccess}
+                handleUnfollowSuccess={handleUnfollowSuccess} />
             }
 
             {followersOpen &&

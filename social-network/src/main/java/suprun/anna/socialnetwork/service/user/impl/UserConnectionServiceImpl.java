@@ -42,11 +42,6 @@ public class UserConnectionServiceImpl implements UserConnectionService {
         if (followings.isEmpty()) {
             return getRandomUsers(followings).stream().map(userMapper::toDto).collect(Collectors.toSet());
         }
-        System.out.println(11111111);
-        for (User u : followings){
-            System.out.println(u.getName() + " " + u.getId());
-        }
-        System.out.println();
         for (User randomFollowing : followings) {
             List<User> randomFollowers = getRandomFollowings(randomFollowing, pageSize);
             int size = randomFollowers.size();
@@ -65,13 +60,8 @@ public class UserConnectionServiceImpl implements UserConnectionService {
         if (result.size() < 5) {
             result.addAll(getRandomUsers(followings));
         }
-        System.out.println(222222);
-        for (User u : result){
-            System.out.println(u.getName() + " " + u.getId());
-        }
-        System.out.println(11111111);
-
         return result.stream()
+                .filter(u -> !u.getId().equals(user.getId()))
                 .filter(u -> followings.stream().noneMatch(f -> f.getId().equals(u.getId())))
                 .map(userMapper::toDto)
                 .collect(Collectors.toSet());

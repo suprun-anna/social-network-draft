@@ -5,6 +5,7 @@ import Post from './Post';
 import Menu from '../../components/Menu/Menu';
 import { sendPostRequest, sendGetRequest } from '../../util/requests';
 import { useNavigate } from 'react-router-dom';
+import Recommendations from '../../components/UserInfo/Recommendations';
 
 
 const SERVER = 'http://localhost:8080/api';
@@ -20,14 +21,13 @@ const HomePage = () => {
     const [user, setUser] = useState(null);
 
     async function getUserInfo(request, error = 'Error fetching user data: ') {
-        try{
+        try {
             const response = await sendGetRequest(request, error);
             return response.data;
         } catch (e) {
             navigate('/login');
         }
     }
-
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -79,26 +79,29 @@ const HomePage = () => {
         };
     }, [posts]);
 
+    const handleFollowSuccess = async (id) => {
+        const updatedRecommendations = recommendations.map(rec => {
+            if (id && rec.id === id) {
+                return { ...rec, followed: true };
+            }
+            return rec;
+        });
+        setRecommendations(updatedRecommendations);
+    };
+
+    const handleUnfollowSuccess = async (id) => {
+        const updatedRecommendations = recommendations.map(rec => {
+            if (id && rec.id === id) {
+                return { ...rec, followed: false };
+            }
+            return rec;
+        });
+        setRecommendations(updatedRecommendations);
+    };
+
     return (
         <div className="container">
             <Menu />
-            {user && recommendations && 
-                <ul className='recomms'>
-                    <h4>Recommendations</h4>
-                    {recommendations.map((rec) => (
-                        <div key={rec.id} className='recom'>
-                            <UserItem user={rec} />
-                            <div className='act'>
-                                {!rec.followed && <button className='smol-button'
-                                    onClick={() => follow(rec.id, handleFollowSuccess(rec.id))}>Follow</button>}
-                                {rec.followed && <button className='smol-button'
-                                    onClick={() => unfollow(rec.id, handleUnfollowSuccess(rec.id))}>Unfollow</button>}
-                                <button className='smol-button' onClick={() => removeRecommendation(rec.id)}>x</button>
-                            </div>
-                        </div>
-                    ))}
-                </ul>
-            }
             {posts && posts.length > 0 ? (
                 <div className='posts-container' ref={containerRef}>
                     {posts.map((post) => (
@@ -106,7 +109,14 @@ const HomePage = () => {
                     ))}
                 </div>
             ) : (
-                <div className="no-posts-message">You are not subscribed to anyone yet.</div>
+                <div className="no-posts-message">
+                    <div >{'No posts to see... Follow more users :)'}</div>
+                    <Recommendations
+                        user={user}
+                        handleFollowSuccess={handleFollowSuccess}
+                        handleUnfollowSuccess={handleUnfollowSuccess}
+                    />
+                </div>
             )}
         </div>
     );
@@ -114,76 +124,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import '../../styles/authStyles.css';
-// import '../../styles/styles.css';
-// import Post from './Post';
-// import Menu from '../../components/Menu/Menu';
-
-// const SERVER = 'http://localhost:8080/api';
-
-// const HomePage = () => {
-//     const [user, setUser] = useState(null);
-//     const [post, setPost] = useState(null);
-
-//     async function sendGetRequest(request, error) {
-//         try {
-//             const response = await axios.get(request, {
-//                 headers: {
-//                     'Authorization': `Bearer ${localStorage.getItem('token')}`
-//                 }
-//             });
-//             return response.data;
-//         } catch (e) {
-//             console.error(error, e);
-//         }
-//     }
-
-//     useEffect(() => {
-//         const fetchUserData = async () => {
-//             setUser(await getUser(`${SERVER}/user/me`));
-//             const postIdentificator = window.location.pathname.split('/').pop();
-//             setPost(await getPost(`${SERVER}/posts/get?id=${postIdentificator}`));
-//         };
-
-//         fetchUserData();
-//     }, []);
-
-
-//     async function getUser(request, error = 'Error fetching user data: ') {
-//         return await sendGetRequest(request, error);
-//     }
-
-//     async function getPost(request, error = 'Error fetching connections:') {
-//         return await sendGetRequest(request, error);
-//     }
-
-
-
-
-
-//     return (
-//         <div className="container">
-//             <Menu />
-//             {user && post && <Post post={post}></Post>}
-//         </div>
-//     );
-
-// };
-
-// export default HomePage;
