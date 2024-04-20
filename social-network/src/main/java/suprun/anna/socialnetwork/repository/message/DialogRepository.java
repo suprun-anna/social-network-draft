@@ -1,10 +1,8 @@
-package suprun.anna.socialnetwork.repository.Message;
+package suprun.anna.socialnetwork.repository.message;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import suprun.anna.socialnetwork.model.Dialog;
-import suprun.anna.socialnetwork.model.Message;
 
 import java.util.List;
 import java.util.Optional;

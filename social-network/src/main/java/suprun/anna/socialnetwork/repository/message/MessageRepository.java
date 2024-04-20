@@ -1,12 +1,10 @@
-package suprun.anna.socialnetwork.repository.Message;
+package suprun.anna.socialnetwork.repository.message;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import suprun.anna.socialnetwork.dto.message.MessageDto;
-import suprun.anna.socialnetwork.model.Comment;
 import suprun.anna.socialnetwork.model.Message;
 
 import java.util.List;

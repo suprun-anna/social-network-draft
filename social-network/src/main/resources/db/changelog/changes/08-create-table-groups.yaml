@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create_table_posts
+      id: create-table-groups
       author: suprun
       changes:
         - createTable:
-            tableName: posts
+            tableName: groups
             columns:
               - column:
                   name: id
@@ -14,48 +14,38 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: title
+                  name: owner_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_groups_owner_id
+                    references: users(id)
+                    nullable: false
+              - column:
+                  name: name
                   type: VARCHAR(255)
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
-                  name: content
+                  name: profile_picture
+                  type: VARCHAR(255)
+                  defaultValue: 'default_group_pfp.png'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
                   type: TEXT
                   constraints:
                     nullable: true
               - column:
-                  name: user_id
-                  type: BIGINT
-                  constraints:
-                    foreignKeyName: fk_posts_user_id
-                    references: users(id)
-              - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  defaultValueComputed: CURRENT_TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: picture_url
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: like_count
+                  name: follower_count
                   type: INT
                   defaultValue: 0
                   constraints:
                     nullable: false
               - column:
-                  name: comment_count
-                  type: INT
-                  defaultValue: 0
-                  constraints:
-                    nullable: false
-              - column:
-                  name: is_updated
+                  name: is_open
                   type: BOOLEAN
-                  defaultValue: false
+                  defaultValue: true
                   constraints:
                     nullable: false
               - column:
@@ -64,3 +54,6 @@ databaseChangeLog:
                   defaultValue: false
                   constraints:
                     nullable: false
+      rollback:
+        - dropTable:
+            tableName: groups

@@ -14,12 +14,17 @@ databaseChangeLog:
   - include:
       file: /db/changelog/changes/07-create-table-user-connections.yaml
   - include:
-      file: /db/changelog/changes/08-create-table-posts.yaml
+      file: /db/changelog/changes/08-create-table-groups.yaml
   - include:
-      file: /db/changelog/changes/09-create-table-likes.yaml
+      file: /db/changelog/changes/09-create-table-groups-followers.yaml
   - include:
-      file: /db/changelog/changes/10-create-table-comments.yaml
+      file: /db/changelog/changes/10-create-table-posts.yaml
   - include:
-      file: /db/changelog/changes/11-create-table-dialogs.yaml
+      file: /db/changelog/changes/11-create-table-likes.yaml
   - include:
-      file: /db/changelog/changes/12-create-table-messages.yaml
+      file: /db/changelog/changes/12-create-table-comments.yaml
+  - include:
+      file: /db/changelog/changes/13-create-table-dialogs.yaml
+  - include:
+      file: /db/changelog/changes/14-create-table-messages.yaml
+

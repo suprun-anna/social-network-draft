@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-groups-followers
+      author: suprun
+      changes:
+        - createTable:
+            tableName: groups_followers
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: follower_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_groups_followers_follower_id
+                    references: users(id)
+              - column:
+                  name: group_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_groups_followers_group_id
+                    references: groups(id)
+      rollback:
+        - dropTable:
+            tableName: groups_followers

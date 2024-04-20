@@ -8,7 +8,7 @@ import suprun.anna.socialnetwork.dto.message.MessageDto;
 import suprun.anna.socialnetwork.dto.message.MessageRequestDto;
 import suprun.anna.socialnetwork.mapper.MessageMapper;
 import suprun.anna.socialnetwork.model.Message;
-import suprun.anna.socialnetwork.repository.Message.MessageRepository;
+import suprun.anna.socialnetwork.repository.message.MessageRepository;
 import suprun.anna.socialnetwork.service.message.MessageService;
 import suprun.anna.socialnetwork.service.user.UserService;
 

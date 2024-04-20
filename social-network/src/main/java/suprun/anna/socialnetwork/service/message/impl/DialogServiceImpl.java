@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import suprun.anna.socialnetwork.model.Dialog;
 import suprun.anna.socialnetwork.model.User;
-import suprun.anna.socialnetwork.repository.Message.DialogRepository;
+import suprun.anna.socialnetwork.repository.message.DialogRepository;
 import suprun.anna.socialnetwork.service.message.DialogService;
 import suprun.anna.socialnetwork.service.user.UserService;
 
