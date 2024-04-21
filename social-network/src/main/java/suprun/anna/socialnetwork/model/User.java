@@ -58,10 +58,13 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "groups_followers",
-            joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<Group> groups;
+    @JoinTable(name = "clubs_members",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "club_id"))
+    private Set<Club> clubs;
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Club> ownedClubs;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<UserConnection> followers;

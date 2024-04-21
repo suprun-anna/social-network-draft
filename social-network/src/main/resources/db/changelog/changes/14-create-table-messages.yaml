@@ -16,12 +16,14 @@ databaseChangeLog:
                   name: sender_id
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    foreignKeyName: fk_messages_sender_id
+                    references: users(id)
               - column:
                   name: receiver_id
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    foreignKeyName: fk_messages_receiver_id
+                    references: users(id)
               - column:
                   name: message_text
                   type: VARCHAR(255)
@@ -36,4 +38,5 @@ databaseChangeLog:
                   name: dialog_id
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    foreignKeyName: fk_messages_dialog_id
+                    references: dialogs(id)

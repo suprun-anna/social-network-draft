@@ -1,6 +1,6 @@
 package suprun.anna.socialnetwork.dto.group;
 
-public record GroupDto (
+public record ClubDto(
         Long id,
         String name,
         String description,

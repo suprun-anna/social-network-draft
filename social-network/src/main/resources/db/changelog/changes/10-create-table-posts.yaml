@@ -31,11 +31,11 @@ databaseChangeLog:
                     references: users(id)
                     nullable: false
               - column:
-                  name: group_id
+                  name: club_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: fk_posts_group_id
-                    references: groups(id)
+                    foreignKeyName: fk_posts_club_id
+                    references: clubs(id)
                     nullable: true
               - column:
                   name: created_at

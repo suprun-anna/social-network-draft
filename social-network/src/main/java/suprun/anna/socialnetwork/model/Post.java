@@ -58,13 +58,13 @@ public class Post {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = true)
-    private Group group;
+    @JoinColumn(name = "club_id", nullable = true)
+    private Club club;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private Set<Like> likes;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private Set<Comment> comments;
 
     public Post(Long id) {

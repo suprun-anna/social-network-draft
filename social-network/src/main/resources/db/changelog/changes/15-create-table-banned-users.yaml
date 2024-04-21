@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-dialogs-table
+      id: create-banned-users-table
       author: suprun
       changes:
         - createTable:
-            tableName: dialogs
+            tableName: banned_users
             columns:
               - column:
                   name: id
@@ -12,16 +12,16 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    nullable: false
               - column:
-                  name: user1_id
+                  name: user_id
                   type: bigint
                   constraints:
-                    foreignKeyName: fk_dialogs_user1_id
+                    foreignKeyName: fk_banned_user_id
                     references: users(id)
               - column:
-                  name: user2_id
-                  type: bigint
-                  constraints:
-                    foreignKeyName: fk_dialogs_user2_id
-                    references: users(id)
+                  name: ban_reason
+                  type: varchar(255)
+              - column:
+                  name: banned_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-groups-followers
+      id: create-table-clubs-members
       author: suprun
       changes:
         - createTable:
-            tableName: groups_followers
+            tableName: clubs_members
             columns:
               - column:
                   name: id
@@ -14,17 +14,17 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: follower_id
+                  name: member_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: fk_groups_followers_follower_id
+                    foreignKeyName: fk_clubs_members_follower_id
                     references: users(id)
               - column:
-                  name: group_id
+                  name: club_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: fk_groups_followers_group_id
-                    references: groups(id)
+                    foreignKeyName: fk_clubs_members_club_id
+                    references: clubs(id)
       rollback:
         - dropTable:
-            tableName: groups_followers
+            tableName: clubs_followers

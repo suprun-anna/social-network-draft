@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-groups
+      id: create-table-clubs
       author: suprun
       changes:
         - createTable:
-            tableName: groups
+            tableName: clubs
             columns:
               - column:
                   name: id
@@ -17,7 +17,7 @@ databaseChangeLog:
                   name: owner_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: fk_groups_owner_id
+                    foreignKeyName: fk_clubs_owner_id
                     references: users(id)
                     nullable: false
               - column:
@@ -37,7 +37,7 @@ databaseChangeLog:
                   constraints:
                     nullable: true
               - column:
-                  name: follower_count
+                  name: member_count
                   type: INT
                   defaultValue: 0
                   constraints:
@@ -56,4 +56,4 @@ databaseChangeLog:
                     nullable: false
       rollback:
         - dropTable:
-            tableName: groups
+            tableName: clubs
