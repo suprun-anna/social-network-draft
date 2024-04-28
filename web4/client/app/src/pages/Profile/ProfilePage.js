@@ -48,7 +48,7 @@ const ProfilePage = () => {
             <Menu />
             <div className="profile">
 
-                {user && <PostsComponent userId={user.id} />}
+                {user && <PostsComponent request={`posts/getAll?id=${user.id}`} />}
 
                 <header>
                     <div className="profile-info-container">

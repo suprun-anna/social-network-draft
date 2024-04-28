@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import suprun.anna.socialnetwork.dto.club.ClubRedirectResponseDto;
 import suprun.anna.socialnetwork.dto.user.UserRedirectResponseDto;
+import suprun.anna.socialnetwork.service.club.ClubService;
 import suprun.anna.socialnetwork.service.user.UserConnectionService;
 import suprun.anna.socialnetwork.service.user.UserService;
 
@@ -20,11 +22,19 @@ import java.util.List;
 @RequestMapping(value = "/search")
 public class SearchController {
     private final UserService userService;
+    private final ClubService clubService;
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<UserRedirectResponseDto> getAllFollowers(@RequestParam String username, Pageable pageable){
+    public List<UserRedirectResponseDto> searchUsers(@RequestParam String username, Pageable pageable){
         System.out.println("search for user");
         return userService.findByPartialUsername(username, pageable);
+    }
+
+    @GetMapping("/club")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<ClubRedirectResponseDto> searchClubs(@RequestParam String name, Pageable pageable){
+        System.out.println("search for clubs");
+        return clubService.findOpenClubsByPartialName(name, pageable);
     }
 }

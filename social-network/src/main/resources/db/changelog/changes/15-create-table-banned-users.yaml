@@ -25,3 +25,9 @@ databaseChangeLog:
                   name: banned_at
                   type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: unbanned
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false

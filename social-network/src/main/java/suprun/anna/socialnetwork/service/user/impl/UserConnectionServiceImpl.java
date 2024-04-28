@@ -11,8 +11,8 @@ import suprun.anna.socialnetwork.dto.user.UserRedirectResponseDto;
 import suprun.anna.socialnetwork.mapper.UserMapper;
 import suprun.anna.socialnetwork.model.User;
 import suprun.anna.socialnetwork.model.UserConnection;
-import suprun.anna.socialnetwork.repository.user.UserConnectionRepository;
-import suprun.anna.socialnetwork.repository.user.UserRepository;
+import suprun.anna.socialnetwork.repository.UserConnectionRepository;
+import suprun.anna.socialnetwork.repository.UserRepository;
 import suprun.anna.socialnetwork.service.user.UserConnectionService;
 
 import java.time.LocalDateTime;
@@ -34,55 +34,111 @@ public class UserConnectionServiceImpl implements UserConnectionService {
                 .toList();
     }
 
+//    @Override
+//    public Set<UserResponseDto> getRandomFollowersOfFollowings(User user) {
+//        Set<User> result = new HashSet<>();
+//        int pageSize = 10;
+//        List<User> followings = getRandomFollowings(user, pageSize);
+//        if (followings.isEmpty()) {
+//            return getRandomUsers(followings).stream().map(userMapper::toDto).collect(Collectors.toSet());
+//        }
+//        for (User randomFollowing : followings) {
+//            List<User> randomFollowers = getRandomFollowings(randomFollowing, pageSize);
+//            int size = randomFollowers.size();
+//            int from, to;
+//            if (size == 0) continue;
+//            else if (size == 1 || size == 2) {
+//                from = size / 2;
+//                to = 1;
+//            } else {
+//                from = random.nextInt(randomFollowers.size() - 2);
+//                to = random.nextInt(from + 1, randomFollowers.size());
+//            }
+//            List<User> users = randomFollowers.subList(from, to);
+//            result.addAll(users);
+//        }
+//        if (result.size() < 5) {
+//            result.addAll(getRandomUsers(followings));
+//        }
+//        return result.stream()
+//                .filter(u -> !u.getId().equals(user.getId()))
+//                .filter(u -> followings.stream().noneMatch(f -> f.getId().equals(u.getId())))
+//                .map(userMapper::toDto)
+//                .collect(Collectors.toSet());
+//    }
+
     @Override
     public Set<UserResponseDto> getRandomFollowersOfFollowings(User user) {
         Set<User> result = new HashSet<>();
         int pageSize = 10;
         List<User> followings = getRandomFollowings(user, pageSize);
-        if (followings.isEmpty()) {
-            return getRandomUsers(followings).stream().map(userMapper::toDto).collect(Collectors.toSet());
+        for(User following : followings) {
+            List<User> newFollowings = getRandomFollowings(following, pageSize);
+            List<User> users = new ArrayList<>();
+            users.addAll(result);
+            users.addAll(followings);
+            result.addAll(addToRecommendations(users, newFollowings));
         }
-        for (User randomFollowing : followings) {
-            List<User> randomFollowers = getRandomFollowings(randomFollowing, pageSize);
-            int size = randomFollowers.size();
-            int from, to;
-            if (size == 0) continue;
-            else if (size == 1 || size == 2) {
-                from = size / 2;
-                to = 1;
-            } else {
-                from = random.nextInt(randomFollowers.size() - 2);
-                to = random.nextInt(from + 1, randomFollowers.size());
-            }
-            List<User> users = randomFollowers.subList(from, to);
-            result.addAll(users);
+
+        int stop = 0;
+        while (result.size() < 10 && stop != 5) {
+            List<User> newFollowings = getRandomUsers();
+            List<User> users = new ArrayList<>();
+            users.addAll(result);
+            users.addAll(followings);
+            result.addAll(addToRecommendations(users, newFollowings));
+            stop++;
         }
-        if (result.size() < 5) {
-            result.addAll(getRandomUsers(followings));
-        }
+
         return result.stream()
                 .filter(u -> !u.getId().equals(user.getId()))
-                .filter(u -> followings.stream().noneMatch(f -> f.getId().equals(u.getId())))
                 .map(userMapper::toDto)
                 .collect(Collectors.toSet());
     }
 
+    private List<User> addToRecommendations(List<User> list, List<User> newFollowings) {
+        List<User> result = new ArrayList<>();
+        for(User newFollowing : newFollowings) {
+            boolean exists = list.stream()
+                    .anyMatch(u -> u.getName().equals(newFollowing.getName()));
+            System.out.println(newFollowing.getName() + "  " +exists);
+            if(!exists) {
+                result.add(newFollowing);
+            }
+        }
+        return result;
+    }
+
     private List<User> getRandomFollowings(User user, int pageSize){
-        int totalFollowers = user.getFollowingCount();
-        int randomPageNumber = (int) (Math.random() * (totalFollowers / 10));
+        int totalFollowings = user.getFollowingCount();
+
+        if (totalFollowings == 0) {
+            System.out.println(1);
+            return List.of();
+        }
+        if (totalFollowings <= pageSize) {
+            System.out.println(2);
+            return userConnectionRepository.getAllFollowings(user.getId(), Pageable.unpaged());
+        }
+
+        int randomPageNumber = (int) (Math.random() * (totalFollowings / pageSize));
         Pageable pageable = PageRequest.of(randomPageNumber, pageSize);
+        System.out.println(3);
         return userConnectionRepository.getAllFollowings(user.getId(), pageable);
     }
 
-    private List<User> getRandomUsers(List<User> existingUsers){
+
+
+
+    private List<User> getRandomUsers(){
         List<User> all = userRepository.findAll();
         int size = all.size();
-        int from = size > 10 ? random.nextInt( size - 10) : 0;
-        int to = size > 10 ? random.nextInt(from + 10) : size;
+        int from = size > 10 ? random.nextInt(size - 10) : 0;
+        int to = size > 10 ? from + random.nextInt(size - from) : size;
         List<User> users = all.subList(from, to);
-        users.removeAll(existingUsers);
         return users;
     }
+
 
     @Override
     public List<UserRedirectResponseDto> getAllFollowings(Long id, Pageable pageable) {

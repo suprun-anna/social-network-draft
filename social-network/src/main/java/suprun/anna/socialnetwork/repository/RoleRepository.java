@@ -1,4 +1,4 @@
-package suprun.anna.socialnetwork.repository.user;
+package suprun.anna.socialnetwork.repository;
 
 import java.util.Optional;
 import suprun.anna.socialnetwork.model.Role;

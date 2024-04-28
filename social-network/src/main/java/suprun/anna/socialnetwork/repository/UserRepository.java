@@ -1,17 +1,14 @@
-package suprun.anna.socialnetwork.repository.user;
+package suprun.anna.socialnetwork.repository;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import suprun.anna.socialnetwork.dto.user.UserResponseDto;
 import suprun.anna.socialnetwork.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import suprun.anna.socialnetwork.model.UserConnection;
 
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name != 'ROLE_ADMIN' " +
             "AND u.email = :email ")
     Optional<User> findByEmail(String email);

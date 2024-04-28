@@ -1,7 +1,7 @@
 package suprun.anna.socialnetwork.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
-import suprun.anna.socialnetwork.repository.user.UserRepository;
+import suprun.anna.socialnetwork.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

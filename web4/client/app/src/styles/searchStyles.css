@@ -1,11 +1,11 @@
 .search-page {
-    width: 43%;
-    margin: 0 10px 0 0;
+    width: 44%;
     padding: 30px;
     background-color: white;
     border-radius: 10px;
     border: 1px solid rgb(206, 206, 206);
-    height: calc(100vh - 60px);
+    height: calc(100vh - 80px);
+    margin: 0 10px 0 10px;
 }
 
 .search-container{
@@ -13,8 +13,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 100%;
     height: calc(100vh - 20px);
+    margin: 0 0 0 10px;
+    width: 90%;
 }
 
 .search-page h2 {

@@ -1,4 +1,4 @@
-package suprun.anna.socialnetwork.dto.group;
+package suprun.anna.socialnetwork.dto.club;
 
 public record ClubCreateDto(
         String name,

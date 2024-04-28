@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "banned_users")
 @RequiredArgsConstructor
-@NoArgsConstructor
 public class BannedUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +18,11 @@ public class BannedUser {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "ban_reason")
     private String banReason;
 
     @Column(name = "banned_at", nullable = false)
     private LocalDateTime bannedAt;
+
+    @Column(nullable = false)
+    private boolean unbanned;
 }

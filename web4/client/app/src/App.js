@@ -14,6 +14,8 @@ import ChatPage from './Messaging/ChatPage';
 import ChatListPage from './Messaging/ChatListPage';
 import UserSearch from './components/Search/UserSearch';
 import SearchPage from './pages/Profile/SearchPage';
+import ClubPage from './pages/Clubs/ClubPage';
+import MyClubsPage from './pages/Clubs/MyClubsPage';
 
 
 const App = () => {
@@ -30,10 +32,14 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/profile/edit" element={<ProfileEditPage />} />
         <Route path="/posts/post/create" element={<CreatePostPage />} />
+        <Route path="/posts/post/create/:id" element={<CreatePostPage />} />
         <Route path="/posts/post/edit/:id" element={<EditPostPage />} />
         <Route path="/chat" element={<ChatListPage />} />
         <Route path="/chat/:username" element={<ChatPage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/clubs" element={<MyClubsPage />} />
+        <Route path="/clubs/:name" element={<ClubPage />} />
+
       </Routes>
     </Router>
   );

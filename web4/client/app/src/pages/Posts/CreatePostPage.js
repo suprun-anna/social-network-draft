@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const SERVER = 'http://localhost:8080/api';
 
 
-const CreatePostPage = () => {
+const CreatePostPage = (clubId) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [picture, setPicture] = useState(null);
@@ -41,6 +41,10 @@ const CreatePostPage = () => {
             formData.append('title', title);
             formData.append('content', content);
             formData.append('picture', picture);
+            let clubId = window.location.pathname.split('/').pop();
+            clubId = !isNaN(parseInt(clubId)) ? parseInt(clubId) : undefined;
+            clubId && formData.append('club', clubId);
+            console.log(clubId);
 
             if (isPictureSelected) {
                 const response = await axios.post(`${SERVER}/posts/create`, formData, {
@@ -49,7 +53,7 @@ const CreatePostPage = () => {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                navigate('/profile/user/me');
+                navigate(clubId != undefined ? `/clubs/${clubId}` : '/profile/user/me');
             } else setErrorMessage('Picture is not selected!');
         } catch (error) {
             if (error.response) {
@@ -61,7 +65,9 @@ const CreatePostPage = () => {
     };
 
     const cancel = () => {
-        navigate(`/profile/user/me`);
+        let clubId = window.location.pathname.split('/').pop();
+        clubId = !isNaN(parseInt(clubId)) ? parseInt(clubId) : undefined;
+        navigate(clubId != undefined ? `/clubs/${clubId}` : '/profile/user/me');
     };
 
     return (

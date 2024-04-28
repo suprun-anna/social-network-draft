@@ -7,6 +7,7 @@ public record PostDto(
         String title,
         String content,
         Long userId,
+        Long clubId,
         LocalDateTime createdAt,
         String pictureUrl,
         int likeCount,

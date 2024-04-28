@@ -1,7 +1,6 @@
-package suprun.anna.socialnetwork.repository.user;
+package suprun.anna.socialnetwork.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import suprun.anna.socialnetwork.model.BannedUser;
 
 public interface BannedUserRepository extends JpaRepository<BannedUser, Long> {

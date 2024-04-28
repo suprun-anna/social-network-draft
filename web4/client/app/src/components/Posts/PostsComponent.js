@@ -7,7 +7,7 @@ const SERVER = 'http://localhost:8080/api';
 
 
 
-const PostsComponent = ({ userId }) => {
+const PostsComponent = ({ request }) => {
     const size = 15;
 
     const [posts, setPosts] = useState([]);
@@ -18,7 +18,9 @@ const PostsComponent = ({ userId }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await sendGetRequest(`${SERVER}/posts/getAll?id=${userId}&page=${currentPage}&size=${size}`);
+                // const response = await sendGetRequest(`${SERVER}/posts/getAll?id=${userId}&page=${currentPage}&size=${size}`);
+                const response = await sendGetRequest(`${SERVER}/${request}&page=${currentPage}&size=${size}`);
+
                 const newData = response.data;
                 if (newData.length > 0) {
                     const updatedData = await Promise.all(newData.map(async (post) => {
@@ -76,7 +78,7 @@ const PostsComponent = ({ userId }) => {
                 </section>
             ) : (
                 <div className="no-posts-message-container">
-                    <div className="no-posts-message">The user has not published any posts yet.</div>
+                    <div className="no-posts-message">No posts created yet.</div>
                 </div>
             )}
         </main>

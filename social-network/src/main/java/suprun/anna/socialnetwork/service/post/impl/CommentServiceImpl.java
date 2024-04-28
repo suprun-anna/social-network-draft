@@ -9,9 +9,9 @@ import suprun.anna.socialnetwork.mapper.CommentMapper;
 import suprun.anna.socialnetwork.model.Comment;
 import suprun.anna.socialnetwork.model.Post;
 import suprun.anna.socialnetwork.model.User;
-import suprun.anna.socialnetwork.repository.post.CommentRepository;
-import suprun.anna.socialnetwork.repository.post.PostRepository;
-import suprun.anna.socialnetwork.repository.user.UserRepository;
+import suprun.anna.socialnetwork.repository.CommentRepository;
+import suprun.anna.socialnetwork.repository.PostRepository;
+import suprun.anna.socialnetwork.repository.UserRepository;
 import suprun.anna.socialnetwork.service.post.CommentService;
 import org.springframework.stereotype.Service;
 

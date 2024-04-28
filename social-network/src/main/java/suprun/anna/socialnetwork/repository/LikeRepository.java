@@ -1,7 +1,6 @@
-package suprun.anna.socialnetwork.repository.post;
+package suprun.anna.socialnetwork.repository;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import suprun.anna.socialnetwork.model.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface LikeRepository extends JpaRepository<Like, Long>, JpaSpecificationExecutor<Like> {
+public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query("SELECT l FROM Like l "
             + "WHERE l.post.id = :postId AND l.isDeleted = FALSE "
             + "ORDER BY l.leftAt DESC"

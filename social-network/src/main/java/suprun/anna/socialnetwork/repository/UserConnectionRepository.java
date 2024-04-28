@@ -1,7 +1,6 @@
-package suprun.anna.socialnetwork.repository.user;
+package suprun.anna.socialnetwork.repository;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import suprun.anna.socialnetwork.model.User;
@@ -11,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserConnectionRepository extends JpaRepository<UserConnection, Long>, JpaSpecificationExecutor<UserConnection> {
+public interface UserConnectionRepository extends JpaRepository<UserConnection, Long> {
     @Query("SELECT c.follower FROM UserConnection c " +
             "WHERE c.user.id = :userId AND c.isDeleted = FALSE " +
             "ORDER BY c.createdAt DESC")

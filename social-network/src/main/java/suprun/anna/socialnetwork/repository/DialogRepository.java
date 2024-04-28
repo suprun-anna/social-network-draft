@@ -1,4 +1,4 @@
-package suprun.anna.socialnetwork.repository.message;
+package suprun.anna.socialnetwork.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

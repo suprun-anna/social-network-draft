@@ -12,7 +12,8 @@ import suprun.anna.socialnetwork.dto.post.PostUpdateDto;
 import suprun.anna.socialnetwork.mapper.PostMapper;
 import suprun.anna.socialnetwork.model.Post;
 import suprun.anna.socialnetwork.model.User;
-import suprun.anna.socialnetwork.repository.post.PostRepository;
+import suprun.anna.socialnetwork.repository.ClubRepository;
+import suprun.anna.socialnetwork.repository.PostRepository;
 import suprun.anna.socialnetwork.service.post.FileUploadService;
 import suprun.anna.socialnetwork.service.post.PostService;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +23,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final ClubRepository clubRepository;
     private final FileUploadService fileUploadService;
     private final PostMapper postMapper;
 
     @Override
-    public PostDto save(User user, String title, String content, MultipartFile picture) throws IOException {
+    public PostDto save(User user, String title, String content, MultipartFile picture, Long clubId)
+            throws IOException {
         if (picture.isEmpty()) throw new RuntimeException("Can't create post! Picture is empty!");
         Post post = new Post();
+        if (clubId != null)
+            post.setClub(clubRepository.findById(clubId).orElseThrow(
+                    () -> new RuntimeException("No club with id=" + clubId)));
         post.setUser(user);
         post.setTitle(title);
         post.setContent(content);
@@ -101,5 +107,12 @@ public class PostServiceImpl implements PostService {
             throw new RuntimeException("Post postId=" + post.getId() + " doesn't belong to user userId=" + userId);
         }
         postRepository.deleteById(postId);
+    }
+
+    @Override
+    public List<PostDto> findPostsByClubId(Long clubId, Pageable pageable) {
+        return postRepository.findByClubId(clubId, pageable).stream()
+                .map(postMapper::toDto)
+                .toList();
     }
 }

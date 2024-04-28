@@ -124,16 +124,7 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", bio='" + bio + '\'' +
-                ", profilePicture='" + profilePicture + '\'' +
-                ", age=" + age +
-                ", isDeleted=" + isDeleted +
-                ", roles=" + roles +
-                ", followerCount=" + followerCount +
-                ", followingCount=" + followingCount +
                 '}';
     }
 }

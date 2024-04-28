@@ -10,7 +10,7 @@ import suprun.anna.socialnetwork.model.User;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
-    PostDto save(User user, String title, String content, MultipartFile picture) throws IOException;
+    PostDto save(User user, String title, String content, MultipartFile picture, Long clubId) throws IOException;
 
     List<PostDto> findAll();
 
@@ -25,4 +25,6 @@ public interface PostService {
     List<PostDto> findAllFromFollowings(Long userId, Pageable pageable);
 
     void deleteById(Long userId, Long postId);
+
+    List<PostDto> findPostsByClubId(Long clubId, Pageable pageable);
 }

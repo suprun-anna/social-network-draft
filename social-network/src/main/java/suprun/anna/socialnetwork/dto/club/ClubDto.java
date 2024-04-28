@@ -1,4 +1,4 @@
-package suprun.anna.socialnetwork.dto.group;
+package suprun.anna.socialnetwork.dto.club;
 
 public record ClubDto(
         Long id,
@@ -6,7 +6,7 @@ public record ClubDto(
         String description,
         String profilePicture,
         boolean isOpen,
-        int followersCount,
+        int memberCount,
         Long ownerId
 ) {
 }

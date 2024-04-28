@@ -9,9 +9,9 @@ import suprun.anna.socialnetwork.mapper.LikeMapper;
 import suprun.anna.socialnetwork.model.Like;
 import suprun.anna.socialnetwork.model.Post;
 import suprun.anna.socialnetwork.model.User;
-import suprun.anna.socialnetwork.repository.post.LikeRepository;
-import suprun.anna.socialnetwork.repository.post.PostRepository;
-import suprun.anna.socialnetwork.repository.user.UserRepository;
+import suprun.anna.socialnetwork.repository.LikeRepository;
+import suprun.anna.socialnetwork.repository.PostRepository;
+import suprun.anna.socialnetwork.repository.UserRepository;
 import suprun.anna.socialnetwork.service.post.LikeService;
 
 import java.time.LocalDateTime;

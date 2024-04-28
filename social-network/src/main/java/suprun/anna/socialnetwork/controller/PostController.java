@@ -29,10 +29,12 @@ public class PostController {
     public PostDto createNewPost(Authentication authentication,
                                  @RequestParam("title") String title,
                                  @RequestParam("content") String content,
-                                 @RequestParam("picture") MultipartFile picture) throws IOException {
+                                 @RequestParam("picture") MultipartFile picture,
+                                 @RequestParam(name = "club", required = false) Long clubId
+    ) throws IOException {
         User user = (User) authentication.getPrincipal();
         System.out.println("Create post");
-        return postService.save(user, title, content, picture);
+        return postService.save(user, title, content, picture, clubId);
     }
 
     @GetMapping("/getAll")
@@ -47,6 +49,13 @@ public class PostController {
     public PostDto getPostById(@RequestParam Long id) {
         System.out.println("Get post by id");
         return postService.getById(id);
+    }
+
+    @GetMapping("/getByClub")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<PostDto> getPostsByClubId(@RequestParam Long id, Pageable pageable) {
+        System.out.println("Get post by club id");
+        return postService.findPostsByClubId(id, pageable);
     }
 
     @PutMapping("/edit")
