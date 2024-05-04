@@ -24,7 +24,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public PostDto createNewPost(Authentication authentication,
                                  @RequestParam("title") String title,
@@ -38,28 +38,28 @@ public class PostController {
     }
 
     @GetMapping("/getAll")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<PostDto> getAllPostsFromUser(@RequestParam Long id, Pageable pageable) {
         System.out.println("Get all posts by user");
         return postService.findAllByTimeOrder(id, pageable);
     }
 
     @GetMapping("/get")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public PostDto getPostById(@RequestParam Long id) {
         System.out.println("Get post by id");
         return postService.getById(id);
     }
 
     @GetMapping("/getByClub")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<PostDto> getPostsByClubId(@RequestParam Long id, Pageable pageable) {
         System.out.println("Get post by club id");
         return postService.findPostsByClubId(id, pageable);
     }
 
     @PutMapping("/edit")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public PostDto editPostById(Authentication authentication, @RequestBody PostUpdateDto postUpdateDto) {
         System.out.println("Edit post by id");
         User user = (User) authentication.getPrincipal();
@@ -67,7 +67,7 @@ public class PostController {
     }
 
     @DeleteMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public void deletePostById(Authentication authentication, @RequestParam Long id) {
         System.out.println("Delete post by id");
         User user = (User) authentication.getPrincipal();

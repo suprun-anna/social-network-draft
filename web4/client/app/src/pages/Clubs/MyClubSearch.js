@@ -7,7 +7,7 @@ import { fetchImage } from '../../util/fetchImage';
 
 const SERVER = 'http://localhost:8080/api';
 
-const MyClubSearch = ({request}) => {
+const MyClubSearch = ({ request }) => {
     const size = 10;
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -82,7 +82,17 @@ const MyClubSearch = ({request}) => {
 
     return (
         <div className="search-page">
-           { request ? <h2>My Clubs</h2> : <h2>Created Clubs</h2>}
+            {request ?
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <h2>My Clubs
+                    </h2>
+                </div> :
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <h2>Created Clubs
+                    </h2>
+                    <a className='redir-button' href={`/clubs/create`}>Create new</a>
+                </div>
+            }
             <div className='search-bar'>
                 <input
                     type="text"
@@ -99,7 +109,7 @@ const MyClubSearch = ({request}) => {
                     searchResults.map(club => (
                         <ul key={club.id} className='removable'>
                             <UserItem user={club} club={true} />
-                            {request === false && <a className='redir-button' href={`/club/edit/${club.id}`}>Edit</a>}
+                            {request === false && <a className='redir-button' href={`/clubs/edit/${club.id}`}>Edit</a>}
                         </ul>
                     ))}
             </div>

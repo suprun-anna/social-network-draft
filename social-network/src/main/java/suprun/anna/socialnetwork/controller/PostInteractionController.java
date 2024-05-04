@@ -24,14 +24,14 @@ public class PostInteractionController {
     private final CommentService commentService;
 
     @GetMapping("/likes/getAll")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<LikeDto> getLikes(@RequestParam Long postId, Pageable pageable) {
         System.out.println("Get all likes");
         return likeService.getLikes(postId, pageable);
     }
 
     @GetMapping("/likes/isLiked")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public boolean getLikes(@RequestParam Long postId, @RequestParam Long userId) {
         boolean isLiked = likeService.isLiked(postId, userId);
         System.out.println("Is liked? " + isLiked);
@@ -39,7 +39,7 @@ public class PostInteractionController {
     }
 
     @PostMapping("/likes/place")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public LikeDto placeLike(Authentication authentication, @RequestParam Long postId) {
         System.out.println("Place like");
         User user = (User) authentication.getPrincipal();
@@ -47,7 +47,7 @@ public class PostInteractionController {
     }
 
     @DeleteMapping("/likes/remove")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public void removeLike(Authentication authentication, @RequestParam Long postId) {
         System.out.println("Remove like");
         User user = (User) authentication.getPrincipal();
@@ -55,21 +55,21 @@ public class PostInteractionController {
     }
 
     @GetMapping("/comments/getAll")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<CommentDto> getAllComments(@RequestParam Long postId, Pageable pageable) {
         System.out.println("Get all comments");
         return commentService.getComments(postId, pageable);
     }
 
     @GetMapping("/comments/get")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public CommentDto getComment(@RequestParam Long commentId) {
         System.out.println("Get comment");
         return commentService.getCommentById(commentId);
     }
 
     @PostMapping("/comments/place")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public CommentDto placeComment(Authentication authentication, @RequestBody CommentRequestDto commentDto) {
         System.out.println("Place comment");
         User user = (User) authentication.getPrincipal();
@@ -77,7 +77,7 @@ public class PostInteractionController {
     }
 
     @DeleteMapping("/comments/remove")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public void removeComment(Authentication authentication, @RequestParam Long commentId) {
         System.out.println("Remove comment");
         User user = (User) authentication.getPrincipal();
@@ -85,7 +85,7 @@ public class PostInteractionController {
     }
 
     @PutMapping("/comments/edit")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public CommentDto editComment(Authentication authentication, @RequestParam Long commentId, @RequestParam String text) {
         System.out.println("Edit comment");
         User user = (User) authentication.getPrincipal();

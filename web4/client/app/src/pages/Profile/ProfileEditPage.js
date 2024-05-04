@@ -98,7 +98,7 @@ const ProfileEditPage = () => {
                 </div>
                 <div className="form-group-edit">
                     <label>Bio:</label>
-                    <textarea value={bio} onChange={handleBioChange} />
+                    <textarea className='textarea' value={bio} onChange={handleBioChange} />
                 </div>
                 <div className="form-group-edit">
                     <label>Display Name:</label>

@@ -99,8 +99,8 @@ const UserProfileInfo = ({
     };
 
     const handleForceUnfollowSuccess = async () => {
-        const fCount = followingCount - 1;
-        setFollowingCount(fCount);
+        const fCount = followerCount - 1;
+        setFollowerCount(fCount);
         setStatus(await getConnections(`${SERVER}/follow/checkConnection?userId=${user.id}`));
     };
 
@@ -128,7 +128,8 @@ const UserProfileInfo = ({
             <div className="user-info-bio">
                 <h4 className="display-name" id="display-name">{user.displayName}</h4>
                 <div className="bio" id="bio" >
-                    {user.bio && <LinkifiedUsername text={user.bio} />}
+                    {user.bio ? <LinkifiedUsername text={user.bio} />
+                        : <><br/><br/></>}
                 </div>
             </div>
 
@@ -174,7 +175,7 @@ const UserProfileInfo = ({
                     request={`${SERVER}/follow/getFollowers?userId=${user.id}`}
                     onClose={closeFollowers}
                     userIsMe={userIsMe}
-                    successCallback={handleUnfollowSuccess}
+                    successCallback={handleForceUnfollowSuccess}
                 />
             }
 
@@ -184,7 +185,7 @@ const UserProfileInfo = ({
                     request={`${SERVER}/follow/getFollowings?userId=${user.id}`}
                     onClose={closeFollowings}
                     userIsMe={userIsMe}
-                    successCallback={handleForceUnfollowSuccess}
+                    successCallback={handleUnfollowSuccess}
                 />
             }
         </>

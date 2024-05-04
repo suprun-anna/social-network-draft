@@ -5,6 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import suprun.anna.socialnetwork.model.BannedUser;
+import suprun.anna.socialnetwork.model.User;
+import suprun.anna.socialnetwork.repository.BannedUserRepository;
 
 @RequiredArgsConstructor
 @Component
@@ -22,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final BannedUserRepository bannedUserRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -34,7 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            User user = (User) authentication.getPrincipal();
+            Optional<BannedUser> bannedUsers = bannedUserRepository.checkIfBannedById(user.getId());
+            if (bannedUsers.isEmpty()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
 //        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");

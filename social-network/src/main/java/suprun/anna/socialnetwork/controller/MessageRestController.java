@@ -21,31 +21,31 @@ public class MessageRestController {
     private final DialogService dialogService;
 
     @GetMapping("/dialog/getAll")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<MessageDto> getAllMessagesFromDialog(@RequestParam Long dialogId, Pageable pageable) {
         return messageService.getAllMessagesBetweenUsersByDialogId(dialogId, pageable);
     }
 
     @GetMapping("/dialog")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public Long getDialog(@RequestParam Long user1Id, @RequestParam Long user2Id) {
         return dialogService.getDialogBetweenUsers(user1Id, user2Id);
     }
 
     @GetMapping("/allDialogs")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<Long> getAllDialogs(@RequestParam Long userId) {
         return dialogService.getAllDialogsByUserId(userId);
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<MessageDto> getAllMessages(@RequestParam Long senderId, @RequestParam Long receiverId, Pageable pageable) {
         return messageService.getAllMessagesBetweenUsersByDialogId(senderId, receiverId, pageable);
     }
 
     @GetMapping("/last-message")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public MessageDto getLastMessage(@RequestParam Long dialogId) {
         System.out.println("LAST");
         return messageService.getLastMessageByDialogId(dialogId);

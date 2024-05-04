@@ -16,6 +16,9 @@ import UserSearch from './components/Search/UserSearch';
 import SearchPage from './pages/Profile/SearchPage';
 import ClubPage from './pages/Clubs/ClubPage';
 import MyClubsPage from './pages/Clubs/MyClubsPage';
+import ClubEditPage from './pages/Clubs/ClubEditPage';
+import AdminPage from './pages/Admin/AdminPage';
+import ClubCreatePage from './pages/Clubs/ClubCreatePage';
 
 
 const App = () => {
@@ -38,100 +41,13 @@ const App = () => {
         <Route path="/chat/:username" element={<ChatPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/clubs" element={<MyClubsPage />} />
-        <Route path="/clubs/:name" element={<ClubPage />} />
-
+        <Route path="/clubs/create" element={<ClubCreatePage />} />
+        <Route path="/clubs/:id" element={<ClubPage />} />
+        <Route path="/clubs/edit/:id" element={<ClubEditPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </Router>
   );
 };
 
 export default App;
-
-
-// import React, { useState } from 'react';
-// import SockJsClient from 'react-stomp';
-
-// const SOCKET_URL = 'http://localhost:8080/api/ws-message';
-
-// const App = () => {
-//   const [message, setMessage] = useState('You server message here.');
-
-//   let onConnected = () => {
-//     console.log("Connected!!")
-//   }
-
-//   let onMessageReceived = (msg) => {
-//     setMessage(msg.message);
-//   }
-
-//   return (
-//     <div>
-//       <SockJsClient
-//         url={SOCKET_URL}
-//         topics={['/topic/message']}
-//         onConnect={onConnected}
-//         onDisconnect={console.log("Disconnected!")}
-//         onMessage={msg => onMessageReceived(msg)}
-//         debug={false}
-//       />
-//       <div>{message}</div>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import SockJsClient from 'react-stomp';
-
-// const SOCKET_URL = 'ws://localhost:8080/ws-message';
-
-// const App = () => {
-//   const [message, setMessage] = useState('You server message here.');
-
-//   let onConnected = () => {
-//     console.log("Connected!!")
-//   }
-
-//   let onMessageReceived = (msg) => {
-//     setMessage(msg.message);
-//   }
-
-//   return (
-//     <div>
-//       <SockJsClient
-//         url={SOCKET_URL}
-//         topics={['/topic/message']}
-//         onConnect={onConnected}
-//         onDisconnect={console.log("Disconnected!")}
-//         onMessage={msg => onMessageReceived(msg)}
-//         debug={false}
-//       />
-//       <div>{message}</div>
-//     </div>
-//   );
-// }
-
-// export default App;

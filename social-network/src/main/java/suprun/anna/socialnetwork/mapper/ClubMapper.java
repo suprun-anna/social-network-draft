@@ -7,10 +7,7 @@ import suprun.anna.socialnetwork.config.MapperConfig;
 import suprun.anna.socialnetwork.dto.club.ClubDto;
 import suprun.anna.socialnetwork.dto.club.ClubCreateDto;
 import suprun.anna.socialnetwork.dto.club.ClubRedirectResponseDto;
-import suprun.anna.socialnetwork.dto.user.UserRedirectResponseDto;
 import suprun.anna.socialnetwork.model.Club;
-import suprun.anna.socialnetwork.model.Post;
-import suprun.anna.socialnetwork.model.User;
 
 import java.util.Optional;
 
@@ -26,7 +23,7 @@ public interface ClubMapper {
     ClubRedirectResponseDto toRedirectResponseDto(Club club);
 
     @Named("clubFromId")
-    default Club postFromId(Long id) {
+    default Club clubFromId(Long id) {
         return Optional.ofNullable(id)
                 .map(Club::new)
                 .orElse(null);

@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto userDto) {
-        if (userRepository.findByEmail(userDto.email()).isPresent()
+        if (userRepository.findByUsersEmail(userDto.email()).isPresent()
                 || userRepository.findByUsername(userDto.username()).isPresent()) {
             throw new RegistrationException("Can't register user with email=" + userDto.email()
                     + " or username=" + userDto.username());
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getByEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByUsersEmail(email);
         return user.map(userMapper::toDto).orElseThrow(
                 () -> new EntityNotFoundException("Can't find user by email = " + email));
     }

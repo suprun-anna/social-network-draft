@@ -25,14 +25,14 @@ public class SearchController {
     private final ClubService clubService;
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<UserRedirectResponseDto> searchUsers(@RequestParam String username, Pageable pageable){
         System.out.println("search for user");
         return userService.findByPartialUsername(username, pageable);
     }
 
     @GetMapping("/club")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<ClubRedirectResponseDto> searchClubs(@RequestParam String name, Pageable pageable){
         System.out.println("search for clubs");
         return clubService.findOpenClubsByPartialName(name, pageable);

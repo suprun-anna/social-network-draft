@@ -5,6 +5,8 @@ import { fetchImage } from '../../util/fetchImage';
 import { sendGetRequest, sendPostRequest } from '../../util/requests';
 import ProfileButtons from '../../components/Buttons/ProfileButtons';
 import Modal from '../../components/Modal/ModalWindow';
+import { useNavigate } from 'react-router-dom';
+
 // import Modal from '../Modal/ModalWindow';
 // import ProfileButtons from '../../components/Buttons/ProfileButtons';
 // import { sendGetRequest } from '../../util/requests';
@@ -25,6 +27,7 @@ const ClubInfo = ({
     const [status, setStatus] = useState(false);
     const [memberCount, setMemberCount] = useState(club.followerCount);
     const [followersOpen, setFollowersOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProfilePicture = async () => {
@@ -77,6 +80,9 @@ const ClubInfo = ({
         }
     };
 
+    const redirect = () => {
+        navigate(`/clubs/edit/${club.id}`);
+    };
 
     return (
         <>
@@ -111,10 +117,11 @@ const ClubInfo = ({
                     <button className='button' onClick={handleUnfollowSuccess}>Leave club</button>
                 )}
                 <a className="button" href={`/posts/post/create/${club.id}`}>Create post</a>
+                {userIsMe && 
+                    <button className='button' onClick={redirect}>Edit</button>
+                }
             </div>
 
-        
-        
             {followersOpen &&
                 <Modal
                     text="Members"

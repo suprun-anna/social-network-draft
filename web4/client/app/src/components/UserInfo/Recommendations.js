@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import UserItem from './UserItem';
+import ListItem from './UserItem';
 import { follow, unfollow } from '../../util/follows';
 import { sendGetRequest } from '../../util/requests';
 import { fetchImage } from '../../util/fetchImage';
@@ -65,7 +65,7 @@ const Recommendations = ({
             <h4>Recommendations</h4>
             {recommendations.map((rec) => (
                 <div key={rec.id} className='recom'>
-                    <UserItem user={rec} />
+                    <ListItem user={rec} />
                     <div className='act'>
                         {!rec.followed && <button className='smol-button'
                             onClick={() => follow(rec.id, updateIfFollow(rec.id))}>Follow</button>}

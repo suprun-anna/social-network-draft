@@ -23,7 +23,7 @@ public class ProfileController {
 
     @Operation(summary = "Get my info", description = "Get my info")
     @GetMapping("/me")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserInfoResponseDto getMyInfo(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return userService.getUserInfo(user);
@@ -31,7 +31,7 @@ public class ProfileController {
 
     @Operation(summary = "Get user info", description = "Get user info")
     @GetMapping("/id")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserInfoResponseDto getUserInfoById(@RequestParam Long userId) {
         System.out.println("Get user info");
         return userService.getUserInfo(userService.getById(userId));
@@ -39,7 +39,7 @@ public class ProfileController {
 
     @Operation(summary = "Get user info", description = "Get user info")
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserInfoResponseDto getUserInfoByUsername(@RequestParam String username) {
         System.out.println("Get user info");
         return userService.getUserInfo(userService.getByUsername(username));
@@ -47,7 +47,7 @@ public class ProfileController {
 
     @Operation(summary = "Update profile picture", description = "Update profile picture")
     @PostMapping("/update/pfp")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserResponseDto updatePfp(Authentication authentication,
                                      @RequestParam MultipartFile profilePicture) throws IOException {
         User user = (User) authentication.getPrincipal();
@@ -56,7 +56,7 @@ public class ProfileController {
 
     @Operation(summary = "Update bio", description = "Update bio")
     @PostMapping("/update/bio")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserResponseDto updateBio(Authentication authentication,
                                      @RequestParam String bio) {
         User user = (User) authentication.getPrincipal();
@@ -65,7 +65,7 @@ public class ProfileController {
 
     @Operation(summary = "Update display name", description = "Update display name")
     @PostMapping("/update/displayName")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserResponseDto updateDisplayName(Authentication authentication,
                                      @RequestParam String displayName) {
         User user = (User) authentication.getPrincipal();
@@ -74,6 +74,7 @@ public class ProfileController {
 
     @Operation(summary = "Update age", description = "Update age")
     @PostMapping("/update/age")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserResponseDto updateDisplayName(Authentication authentication,
                                              @RequestParam int age) {
         User user = (User) authentication.getPrincipal();

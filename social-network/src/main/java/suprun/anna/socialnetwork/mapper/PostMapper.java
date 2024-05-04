@@ -11,8 +11,6 @@ import org.mapstruct.Named;
 @Mapper(config = MapperConfig.class, uses = {LikeMapper.class, CommentMapper.class, ClubMapper.class})
 public interface PostMapper {
     @Mapping(source = "user.id", target = "userId")
-//    @Mapping(source = "likes", target = "likes", qualifiedByName = "likesToDto")
-//    @Mapping(source = "comments", target = "comments", qualifiedByName = "commentsToDto")
     @Mapping(source = "isUpdated", target = "isUpdated")
     @Named("postsToDto")
     @Mapping(source = "club.id", target = "clubId")

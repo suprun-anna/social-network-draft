@@ -21,7 +21,7 @@ public class FeedController {
     private final PostService postService;
 
     @GetMapping("/get")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public List<PostDto> findAllPostsFromFollowings(Authentication authentication, Pageable pageable) {
         System.out.println("Get all posts from followings");

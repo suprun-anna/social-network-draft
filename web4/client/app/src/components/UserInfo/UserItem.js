@@ -1,11 +1,9 @@
 import React from 'react';
 
-const UserItem = ({ user, club }) => {
-  console.log(club);
-
+const ListItem = ({ user, club }) => {
   return <li className="user-item">
     {club ?
-      <a href={`/clubs/${user.name}`}>
+      <a href={`/clubs/${user.id}`}>
         <div className="small-profile-picture">
           <img src={user.profilePictureURL} alt="Profile" />
         </div>
@@ -22,4 +20,4 @@ const UserItem = ({ user, club }) => {
   </li>
 };
 
-export default UserItem;
+export default ListItem;

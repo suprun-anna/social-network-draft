@@ -25,21 +25,21 @@ public class FollowersController {
     private final UserConnectionService userConnectionService;
 
     @GetMapping("/getFollowers")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<UserRedirectResponseDto> getAllFollowers(@RequestParam Long userId, Pageable pageable){
         System.out.println("Get all followers by user");
         return userConnectionService.getAllFollowers(userId, pageable);
     }
 
     @GetMapping("/getFollowings")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public List<UserRedirectResponseDto> getAllFollowings(@RequestParam Long userId, Pageable pageable){
         System.out.println("Get all followings by user");
         return userConnectionService.getAllFollowings(userId, pageable);
     }
 
     @PutMapping("/follow")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserConnectionDto follow(Authentication authentication, @RequestParam Long userId){
         System.out.println("Follow");
         User user = (User) authentication.getPrincipal();
@@ -47,7 +47,7 @@ public class FollowersController {
     }
 
     @PutMapping("/unfollow")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public boolean unfollow(Authentication authentication, @RequestParam Long userId){
         System.out.println("Unfollow");
         User user = (User) authentication.getPrincipal();
@@ -55,7 +55,7 @@ public class FollowersController {
     }
 
     @PutMapping("/forceUnfollow")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public boolean forceUnfollow(Authentication authentication, @RequestParam Long userId){
         System.out.println("Unfollow");
         User user = (User) authentication.getPrincipal();
@@ -63,7 +63,7 @@ public class FollowersController {
     }
 
     @GetMapping("/checkConnection")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<UserConnection.Connection> checkConnection(Authentication authentication, @RequestParam Long userId){
         System.out.println("Check following");
         User user = (User) authentication.getPrincipal();
@@ -71,7 +71,7 @@ public class FollowersController {
     }
 
     @GetMapping("/recommend")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public Set<UserResponseDto> recommendUser(Authentication authentication) {
         System.out.println("recommend");
         return userConnectionService.getRandomFollowersOfFollowings((User) authentication.getPrincipal());

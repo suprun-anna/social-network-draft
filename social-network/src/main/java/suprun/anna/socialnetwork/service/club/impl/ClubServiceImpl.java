@@ -4,11 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import suprun.anna.socialnetwork.dto.club.ClubCreateDto;
 import suprun.anna.socialnetwork.dto.club.ClubDto;
 import suprun.anna.socialnetwork.dto.club.ClubRedirectResponseDto;
 import suprun.anna.socialnetwork.dto.club.ClubUpdateDto;
 import suprun.anna.socialnetwork.dto.user.UserRedirectResponseDto;
+import suprun.anna.socialnetwork.dto.user.UserResponseDto;
 import suprun.anna.socialnetwork.mapper.ClubMapper;
 import suprun.anna.socialnetwork.mapper.UserMapper;
 import suprun.anna.socialnetwork.model.Club;
@@ -16,7 +18,9 @@ import suprun.anna.socialnetwork.model.User;
 import suprun.anna.socialnetwork.repository.ClubRepository;
 import suprun.anna.socialnetwork.repository.UserRepository;
 import suprun.anna.socialnetwork.service.club.ClubService;
+import suprun.anna.socialnetwork.service.post.FileUploadService;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,6 +33,7 @@ public class ClubServiceImpl implements ClubService {
     private final ClubMapper clubMapper;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
 
     @Override
     public ClubDto save(User user, ClubCreateDto clubCreateDto) {
@@ -105,6 +110,11 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    public ClubDto findById(Long clubId) {
+        return clubMapper.toDto(clubRepository.findById(clubId).orElseThrow());
+    }
+
+    @Override
     public boolean checkClubMemberExistence(Long userId, Long clubId) {
         return clubRepository.findClubMember(userId, clubId).isPresent();
     }
@@ -148,5 +158,23 @@ public class ClubServiceImpl implements ClubService {
             user.getClubs().remove(club);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public ClubDto updateProfilePicture(User user, Long clubId, MultipartFile profilePicture) throws IOException {
+        String path = fileUploadService.saveFile(profilePicture);
+        Optional<Club> groupOptional = clubRepository.findById(clubId);
+        if (groupOptional.isEmpty() || !groupOptional.get().getOwner().getId().equals(user.getId())) {
+            throw new NoSuchElementException();
+        }
+        Club club = groupOptional.get();
+        club.setProfilePicture(path);
+        try {
+            club = clubRepository.save(club);
+        } catch (Exception e) {
+            fileUploadService.deleteFile(path);
+            throw new RuntimeException("Can't update pfp of user with id=" + user.getId());
+        }
+        return clubMapper.toDto(club);
     }
 }

@@ -36,11 +36,7 @@ const Login = () => {
 
     return (
         <>
-
             <div className="auth">
-                {/* <a className="logo" href="/login">
-                    <img id="logo" src={logo} alt="Logo" />
-                </a> */}
                 <div className="form">
                     <h2>Login</h2>
                     <form onSubmit={handleSubmit}>

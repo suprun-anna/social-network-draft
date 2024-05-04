@@ -10,7 +10,7 @@ import ClubInfo from './ClubInfo';
 const SERVER = 'http://localhost:8080/api';
 
 const ClubPage = () => {
-    const [userIsMe, setUserIsMe] = useState(false);
+    const [clubIsMine, setClubIsMine] = useState(false);
     const [club, setClub] = useState(null);
     const navigate = useNavigate();
 
@@ -23,6 +23,9 @@ const ClubPage = () => {
                 const club = (await sendGetRequest(`${SERVER}/club/byId?id=${clubIdentificator}`)).data;
                 if (Object.keys(club).length === 0) navigate('/clubs');
                 setClub(club);
+                const clubIsMine = ((await sendGetRequest(`${SERVER}/club/isMyOwn?id=${clubIdentificator}`)).data);
+                console.log(clubIsMine);
+                setClubIsMine(clubIsMine);
             }
         };
 
@@ -41,7 +44,7 @@ const ClubPage = () => {
                             {club && 
                                 <ClubInfo
                                     club={club}
-                                    userIsMe={userIsMe}
+                                    userIsMe={clubIsMine}
                                 />
                             }
                         </div>
