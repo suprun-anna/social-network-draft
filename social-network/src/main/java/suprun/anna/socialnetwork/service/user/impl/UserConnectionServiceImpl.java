@@ -113,17 +113,14 @@ public class UserConnectionServiceImpl implements UserConnectionService {
         int totalFollowings = user.getFollowingCount();
 
         if (totalFollowings == 0) {
-            System.out.println(1);
             return List.of();
         }
         if (totalFollowings <= pageSize) {
-            System.out.println(2);
             return userConnectionRepository.getAllFollowings(user.getId(), Pageable.unpaged());
         }
 
         int randomPageNumber = (int) (Math.random() * (totalFollowings / pageSize));
         Pageable pageable = PageRequest.of(randomPageNumber, pageSize);
-        System.out.println(3);
         return userConnectionRepository.getAllFollowings(user.getId(), pageable);
     }
 

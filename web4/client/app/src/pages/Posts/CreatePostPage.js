@@ -44,7 +44,6 @@ const CreatePostPage = (clubId) => {
             let clubId = window.location.pathname.split('/').pop();
             clubId = !isNaN(parseInt(clubId)) ? parseInt(clubId) : undefined;
             clubId && formData.append('club', clubId);
-            console.log(clubId);
 
             if (isPictureSelected) {
                 const response = await axios.post(`${SERVER}/posts/create`, formData, {
@@ -81,7 +80,7 @@ const CreatePostPage = (clubId) => {
                 </div>
                 <div className="form-group-edit">
                     <label>Content:</label>
-                    <textarea value={content} onChange={handleContentChange} />
+                    <textarea style={{height: "90px"}} value={content} onChange={handleContentChange} />
                 </div>
                 <div className="form-group-edit">
                     <label>Picture:</label>

@@ -90,7 +90,7 @@ const MyClubSearch = ({ request }) => {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <h2>Created Clubs
                     </h2>
-                    <a className='redir-button' href={`/clubs/create`}>Create new</a>
+                    <a style= {{marginLeft: "50px"}} className='redir-button' href={`/clubs/create`}>Create new</a>
                 </div>
             }
             <div className='search-bar'>

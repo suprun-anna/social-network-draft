@@ -90,7 +90,7 @@ const ClubCreatePage = () => {
     return (
         <div className="edit-form">
             <form onSubmit={handleSubmit}>
-                <h2>Edit Club</h2>
+                <h2>Create Club</h2>
                 <div className="form-group-edit">
                     <label>Profile Picture:</label>
                     <input type="file" onChange={handleProfilePictureChange} accept="image/*" />

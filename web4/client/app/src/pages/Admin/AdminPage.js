@@ -44,7 +44,6 @@ const AdminPage = () => {
     };
 
     const fetchData = async () => {
-        console.log(123);
         if (allLoaded || !searchQuery) return;
         try {
             const response = await sendGetRequest(`${SERVER}/search/user?username=${searchQuery}&page=${currentPage}&size=${size}`);
@@ -56,7 +55,8 @@ const AdminPage = () => {
                         row.profilePictureURL = imageURL;
                     }
                     if (!row.unbanned) {
-                        row.unbanned = await sendGetRequest(`${SERVER}/admin/userStatus?userId=${row.id}`);
+                        row.unbanned = !(await sendGetRequest(`${SERVER}/admin/userStatus?userId=${row.id}`)).data;
+                        console.log(row.unbanned);
                     }
                     return row;
                 }));
